@@ -11,6 +11,11 @@ import com.examle.sikmogilbackend.auth.application.TokenService;
 import com.examle.sikmogilbackend.global.jwt.api.dto.TokenDto;
 import com.examle.sikmogilbackend.global.template.RspTemplate;
 import com.examle.sikmogilbackend.member.domain.SocialType;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,8 +34,13 @@ public class AuthController {
     private final AuthMemberService memberService;
     private final TokenService tokenService;
 
+    @Operation(summary = "로그인 후 토큰 발급", description = "액세스, 리프레쉬 토큰을 발급합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "토큰 발급 성공")
+    })
     @PostMapping("/{provider}/token")
     public RspTemplate<TokenDto> generateAccessAndRefreshToken(
+            @Parameter(name = "provider", description = "소셜 타입(google, apple)", in = ParameterIn.PATH)
             @PathVariable(name = "provider") String provider,
             @RequestBody TokenReqDto tokenReqDto) {
 
@@ -43,6 +53,10 @@ public class AuthController {
         return new RspTemplate<>(HttpStatus.OK, "토큰 발급", getToken);
     }
 
+    @Operation(summary = "액세스 토큰 재발급", description = "리프레쉬 토큰으로 액세스 토큰을 발급합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "토큰 발급 성공")
+    })
     @PostMapping("/token/access")
     public RspTemplate<TokenDto> generateAccessToken(@RequestBody RefreshTokenReqDto refreshTokenReqDto) {
         TokenDto getToken = tokenService.generateAccessToken(refreshTokenReqDto);

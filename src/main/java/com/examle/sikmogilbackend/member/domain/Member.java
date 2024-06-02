@@ -1,5 +1,6 @@
 package com.examle.sikmogilbackend.member.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,18 +21,24 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
+    @Schema(description = "멤버 id", example = "1")
     private Long memberId;
 
+    @Schema(description = "이메일", example = "abcd@gmail.com")
     private String email;
 
+    @Schema(description = "이름", example = "홍길동")
     private String name;
 
+    @Schema(description = "사진 url", example = "url")
     private String picture;
 
     @Enumerated(value = EnumType.STRING)
+    @Schema(description = "소셜로그인 타입", example = "GOOGLE, APPLE")
     private SocialType socialType;
 
     @Enumerated(EnumType.STRING)
+    @Schema(description = "권한", example = "ROLE_USER")
     private Role role;
 
     @Builder
