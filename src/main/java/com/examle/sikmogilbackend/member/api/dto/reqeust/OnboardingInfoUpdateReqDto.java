@@ -6,6 +6,8 @@ public record OnboardingInfoUpdateReqDto(
         String weight,
         String gender,
         String targetWeight,
-        String targetDate
+        String targetDate,
+
+        String createdDate
 ) {
 }

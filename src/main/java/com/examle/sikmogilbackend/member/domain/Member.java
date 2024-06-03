@@ -13,6 +13,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -56,6 +59,9 @@ public class Member {
     @Schema(description = "목표 날짜", example = "2024.06.02")
     private String targetDate;
 
+    @Schema(description = "생성 날짜", example = "2024.06.02")
+    protected String createDate;
+
     @Enumerated(EnumType.STRING)
     @Schema(description = "권한", example = "ROLE_USER")
     private Role role;
@@ -76,5 +82,6 @@ public class Member {
         this.gender = onboardingInfoUpdateReqDto.gender();
         this.targetWeight = onboardingInfoUpdateReqDto.targetWeight();
         this.targetDate = onboardingInfoUpdateReqDto.targetDate();
+        this.createDate = onboardingInfoUpdateReqDto.createdDate();
     }
 }
