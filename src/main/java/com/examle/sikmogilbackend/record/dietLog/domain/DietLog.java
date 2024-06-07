@@ -1,7 +1,6 @@
 package com.examle.sikmogilbackend.record.dietLog.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
-import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -32,7 +31,7 @@ public class DietLog {
     protected String dietDate;
 
     @OneToMany(mappedBy = "dietLog", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<CalendarDietLog> calendarDietLogs = new ArrayList<>();
+    private List<DietList> dietLists = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "member_id")

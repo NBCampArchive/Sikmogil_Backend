@@ -3,8 +3,6 @@ package com.examle.sikmogilbackend.record.WorkoutLog.api;
 import com.examle.sikmogilbackend.global.template.RspTemplate;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutLogService;
-import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
-import com.examle.sikmogilbackend.record.dietLog.application.DietLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

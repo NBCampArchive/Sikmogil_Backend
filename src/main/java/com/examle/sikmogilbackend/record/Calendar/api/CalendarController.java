@@ -48,7 +48,7 @@ public class CalendarController {
     })
     @GetMapping("/getCalenderDate")
     public CalendarDTO findCalendarByDiaryDate(Authentication authentication, String diaryDate){
-        return calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate);
+        return calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate).toDTO();
     }
 
     @Operation(summary = "특정 날짜의 캘린더 내용 업데이트", description = "특정 날짜의 캘린더 내용을 업데이트합니다.")

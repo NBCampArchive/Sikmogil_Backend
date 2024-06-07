@@ -39,12 +39,12 @@ public class CalendarService {
     }
 
     @Transactional
-    public CalendarDTO findCalendarByDiaryDate (String email, String diaryDate) {
+    public Calendar findCalendarByDiaryDate (String email, String diaryDate) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         Calendar calendar = checkExistenceCalendar(member, diaryDate);
 
-        return calendar.toDTO();
+        return calendar;
     }
 
     @Transactional

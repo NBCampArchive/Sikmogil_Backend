@@ -2,7 +2,6 @@ package com.examle.sikmogilbackend.record.WorkoutLog.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
-import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;

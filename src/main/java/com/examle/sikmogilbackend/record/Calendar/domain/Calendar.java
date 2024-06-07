@@ -3,7 +3,7 @@ package com.examle.sikmogilbackend.record.Calendar.domain;
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.CalendarWorkoutLog;
-import com.examle.sikmogilbackend.record.dietLog.domain.CalendarDietLog;
+import com.examle.sikmogilbackend.record.dietLog.domain.DietList;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,7 +39,7 @@ public class Calendar {
     private Member member;
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<CalendarDietLog> calendarDietLogs = new ArrayList<>();
+    private List<DietList> dietLists = new ArrayList<>();
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<CalendarWorkoutLog> calendarWorkoutLogs = new ArrayList<>();

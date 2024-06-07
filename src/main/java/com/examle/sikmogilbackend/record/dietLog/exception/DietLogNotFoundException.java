@@ -8,6 +8,6 @@ public class DietLogNotFoundException extends NotFoundGroupException {
     }
 
     public DietLogNotFoundException() {
-        this("존재하지 않는 식단 입니다`.");
+        this("존재하지 않는 식단 일정입니다`.");
     }
 }

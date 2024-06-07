@@ -36,12 +36,12 @@ public class DietLogService {
     }
 
     @Transactional
-    public DietLogDTO findDietLogByDietDate (String email, String dietDate) {
+    public DietLog findDietLogByDietDate (String email, String dietDate) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         DietLog dietLog = checkExistenceDietLog(member, dietDate);
 
-        return dietLog.toDTO();
+        return dietLog;
     }
 
     @Transactional
