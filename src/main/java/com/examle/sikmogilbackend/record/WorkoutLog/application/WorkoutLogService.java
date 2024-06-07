@@ -36,12 +36,12 @@ public class WorkoutLogService {
     }
 
     @Transactional
-    public WorkoutLogDTO findWorkoutLogByWorkoutDate (String email, String workoutDate) {
+    public WorkoutLog findWorkoutLogByWorkoutDate (String email, String workoutDate) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         WorkoutLog workoutLog = checkExistenceWorkoutLog(member, workoutDate);
 
-        return workoutLog.toDTO();
+        return workoutLog;
     }
 
     @Transactional

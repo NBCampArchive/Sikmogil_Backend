@@ -7,6 +7,8 @@ import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
 import com.examle.sikmogilbackend.record.Calendar.application.CalendarService;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
+import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutListService;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.application.DietPictureService;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietPicture;
@@ -34,6 +36,7 @@ import java.util.Optional;
 public class CalendarController {
     private final CalendarService calendarService;
     private final DietPictureService dietPictureService;
+    private final WorkoutListService workoutListService;
 
     @Operation(summary = "사용자의 캘린더 내역 출력", description = "사용자의 모든 날짜의 캘린더 내용을 출력합니다.")
     @ApiResponses(value = {
@@ -54,7 +57,8 @@ public class CalendarController {
     public CalendarDTO findCalendarByDiaryDate(Authentication authentication, String diaryDate){
         Calendar calendar = calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate);
         List<DietPictureDTO> dietPictureDTOS = dietPictureService.findDietPictureByDate(calendar);
-        CalendarDTO calendarDTO = calendar.toDTO(dietPictureDTOS);
+        List<WorkoutListDTO> workoutListDTOS = workoutListService.findWorkoutListByDate(calendar);
+        CalendarDTO calendarDTO = calendar.toDTO(dietPictureDTOS, workoutListDTOS);
         return calendarDTO;
     }
 

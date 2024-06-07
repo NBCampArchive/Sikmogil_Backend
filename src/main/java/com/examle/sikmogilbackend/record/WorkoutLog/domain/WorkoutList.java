@@ -1,21 +1,23 @@
 package com.examle.sikmogilbackend.record.WorkoutLog.domain;
 
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CalendarWorkoutLog {
+@AllArgsConstructor
+public class WorkoutList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "calendar_workoutlogs_id")
+    @Column(name = "workout_list_id")
     @Schema(description = "캘린더와 기록들을 연결하기 위한 pk id", example = "1")
-    private Long CalendarWorkoutLogId;
+    private Long workoutListId;
 
     @Schema(description = "진행한 운동", example = "헬스")
     private String performedWorkout;
@@ -39,4 +41,15 @@ public class CalendarWorkoutLog {
     @ManyToOne
     @JoinColumn(name = "workout_log_id")
     private WorkoutLog workoutLog;
+
+    public WorkoutListDTO toDTO(){
+        return WorkoutListDTO.builder()
+                .workoutListId(workoutListId)
+                .performedWorkout(performedWorkout)
+                .workoutTime(workoutTime)
+                .workoutIntensity(workoutIntensity)
+                .workoutPicture(workoutPicture)
+                .calorieBurned(calorieBurned)
+                .build();
+    }
 }

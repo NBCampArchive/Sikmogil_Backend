@@ -100,7 +100,7 @@ public class DietLogController {
         return new RspTemplate<>(HttpStatus.OK, "식단 삭제 성공");
     }
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// DietPicture - @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @Operation(summary = "특정 날짜의 식단 사진 출력", description = "특정 날짜의 식단 사진을 모두 출력합니다.")
     @ApiResponses(value = {

@@ -2,9 +2,9 @@ package com.examle.sikmogilbackend.record.Calendar.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
-import com.examle.sikmogilbackend.record.WorkoutLog.domain.CalendarWorkoutLog;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
+import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
-import com.examle.sikmogilbackend.record.dietLog.domain.DietList;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietPicture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -44,7 +44,7 @@ public class Calendar {
     private List<DietPicture> dietPictures = new ArrayList<>();
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<CalendarWorkoutLog> calendarWorkoutLogs = new ArrayList<>();
+    private List<WorkoutList> workoutLists = new ArrayList<>();
 
 
     public CalendarDTO toDTO(){
@@ -55,12 +55,13 @@ public class Calendar {
                 .build();
     }
 
-    public CalendarDTO toDTO(List<DietPictureDTO> dietPictureDTOS){
+    public CalendarDTO toDTO(List<DietPictureDTO> dietPictureDTOS, List<WorkoutListDTO> workoutListDTOS){
         return CalendarDTO.builder()
                 .diaryDate(diaryDate)
                 .diaryText(diaryText)
                 .diaryWeight(diaryWeight)
                 .dietPictures(dietPictureDTOS)
+                .workoutLists(workoutListDTOS)
                 .build();
     }
 
