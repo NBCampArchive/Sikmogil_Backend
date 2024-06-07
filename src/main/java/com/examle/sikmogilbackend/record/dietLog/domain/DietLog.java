@@ -1,18 +1,20 @@
 package com.examle.sikmogilbackend.record.dietLog.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
+import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class DietLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,5 +37,19 @@ public class DietLog {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public DietLogDTO toDTO(){
+        return DietLogDTO.builder()
+                .waterIntake(waterIntake)
+                .totalCalorieEaten(totalCalorieEaten)
+                .dietDate(dietDate)
+                .build();
+    }
+
+    public void updateDietLog(DietLogDTO dietLogDTO){
+        this.dietDate = dietLogDTO.dietDate();
+        this.waterIntake = dietLogDTO.waterIntake();
+        this.totalCalorieEaten = dietLogDTO.totalCalorieEaten();
+    }
 
 }
