@@ -1,7 +1,6 @@
 package com.examle.sikmogilbackend.record.WorkoutLog.domain;
 
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
-import com.examle.sikmogilbackend.record.dietLog.domain.DietLog;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

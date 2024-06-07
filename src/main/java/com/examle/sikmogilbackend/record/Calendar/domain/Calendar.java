@@ -1,19 +1,20 @@
 package com.examle.sikmogilbackend.record.Calendar.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
+import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.CalendarWorkoutLog;
-import com.examle.sikmogilbackend.record.dietLog.domain.CalendarDietLog;
+import com.examle.sikmogilbackend.record.dietLog.domain.DietList;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Calendar {
     @Id
@@ -38,8 +39,24 @@ public class Calendar {
     private Member member;
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<CalendarDietLog> calendarDietLogs = new ArrayList<>();
+    private List<DietList> dietLists = new ArrayList<>();
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<CalendarWorkoutLog> calendarWorkoutLogs = new ArrayList<>();
+
+
+    public CalendarDTO toDTO(){
+        return CalendarDTO.builder()
+                .diaryDate(diaryDate)
+                .diaryText(diaryText)
+                .diaryWeight(diaryWeight)
+                .build();
+    }
+
+    public void updateCalendar(CalendarDTO calendarDTO){
+        this.diaryWeight = calendarDTO.diaryWeight();
+        this.diaryDate = calendarDTO.diaryDate();
+        this.diaryText = calendarDTO.diaryText();
+    }
+
 }

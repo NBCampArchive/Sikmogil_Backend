@@ -1,18 +1,19 @@
 package com.examle.sikmogilbackend.record.WorkoutLog.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class WorkoutLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +36,18 @@ public class WorkoutLog {
 
     @OneToMany(mappedBy = "workoutLog", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<CalendarWorkoutLog> calendarDietLogs = new ArrayList<>();
+
+    public WorkoutLogDTO toDTO(){
+        return WorkoutLogDTO.builder()
+                .workoutDate(workoutDate)
+                .steps(steps)
+                .totalCaloriesBurned(totalCaloriesBurned)
+                .build();
+    }
+
+    public void updateWorkoutLog(WorkoutLogDTO workoutLogDTO){
+        this.workoutDate = workoutLogDTO.workoutDate();
+        this.steps = workoutLogDTO.steps();
+        this.totalCaloriesBurned = workoutLogDTO.totalCaloriesBurned();
+    }
 }

@@ -1,26 +1,22 @@
 package com.examle.sikmogilbackend.record.dietLog.domain;
 
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
-import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutLog;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietListDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Builder
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CalendarDietLog {
+public class DietList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "calendar_dietlog_id")
+    @Column(name = "diet_list_id")
     @Schema(description = "캘린더와 기록들을 연결하기 위한 pk id", example = "1")
-    private Long CalendarDietLogId;
-
-    @ManyToOne
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
+    private Long dietListId;
 
     @Schema(description = "먹은 음식", example = "짜장면")
     private String foodName;
@@ -35,6 +31,20 @@ public class CalendarDietLog {
     private String mealTime;
 
     @ManyToOne
+    @JoinColumn(name = "calendar_id")
+    private Calendar calendar;
+
+    @ManyToOne
     @JoinColumn(name = "diet_log_id")
     private DietLog dietLog;
+
+    public DietListDTO toDTO(){
+        return DietListDTO.builder()
+                .dietListId(dietListId)
+                .calorie(calorie)
+                .foodName(foodName)
+                .foodPicture(foodPicture)
+                .mealTime(mealTime)
+                .build();
+    }
 }
