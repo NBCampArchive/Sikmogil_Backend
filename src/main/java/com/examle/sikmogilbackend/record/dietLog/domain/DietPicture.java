@@ -1,6 +1,8 @@
 package com.examle.sikmogilbackend.record.dietLog.domain;
 
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietListDTO;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,4 +32,12 @@ public class DietPicture {
     @ManyToOne
     @JoinColumn(name = "diet_log_id")
     private DietLog dietLog;
+
+    public DietPictureDTO toDTO(){
+        return DietPictureDTO.builder()
+                .dietPictureId(dietPictureId)
+                .foodPicture(foodPicture)
+                .dietDate(dietDate)
+                .build();
+    }
 }

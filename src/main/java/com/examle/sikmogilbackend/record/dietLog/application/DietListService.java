@@ -36,7 +36,7 @@ public class DietListService {
     }
 
     @Transactional
-    public void addDiet(String email, String date, DietListDTO dietListDTO){
+    public void addDietList(String email, String date, DietListDTO dietListDTO){
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         DietList dietList = DietList.builder()
                         .mealTime(dietListDTO.mealTime())
@@ -48,7 +48,7 @@ public class DietListService {
     }
 
     @Transactional
-    public void deleteDiet(String email, String date, Long dietListId) {
+    public void deleteDietList(String email, String date, Long dietListId) {
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         DietList dietList = dietListRepository.findDietListByDietListId(dietListId).orElseThrow(DietListNotFoundException::new);
         checkEqualsDiet(dietLog, dietList);
