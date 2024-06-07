@@ -24,15 +24,8 @@ public class DietList {
     @Schema(description = "칼로리", example = "100")
     protected Long calorie;
 
-    @Schema(description = "음식 사진", example = "url")
-    private String foodPicture;
-
     @Schema(description = "음식 먹은 시간대", example = "M: 아침, L: 점심, D:저녁")
     private String mealTime;
-
-    @ManyToOne
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
 
     @ManyToOne
     @JoinColumn(name = "diet_log_id")
@@ -43,7 +36,6 @@ public class DietList {
                 .dietListId(dietListId)
                 .calorie(calorie)
                 .foodName(foodName)
-                .foodPicture(foodPicture)
                 .mealTime(mealTime)
                 .build();
     }

@@ -4,6 +4,7 @@ import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.CalendarWorkoutLog;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietList;
+import com.examle.sikmogilbackend.record.dietLog.domain.DietPicture;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,7 +40,7 @@ public class Calendar {
     private Member member;
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<DietList> dietLists = new ArrayList<>();
+    private List<DietPicture> dietPictures = new ArrayList<>();
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<CalendarWorkoutLog> calendarWorkoutLogs = new ArrayList<>();
