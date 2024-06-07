@@ -46,7 +46,7 @@ public class CalendarController {
             @ApiResponse(responseCode = "200", description = "캘린더의 특정 날짜 데이터 출력 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
-    @GetMapping("/getCalenderDate")
+    @GetMapping("/getCalendarDate")
     public CalendarDTO findCalendarByDiaryDate(Authentication authentication, String diaryDate){
         return calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate).toDTO();
     }
