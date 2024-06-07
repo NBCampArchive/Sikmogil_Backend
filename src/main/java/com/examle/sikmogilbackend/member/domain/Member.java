@@ -28,6 +28,9 @@ public class Member {
     @Schema(description = "멤버 id", example = "1")
     private Long memberId;
 
+    @Schema(description = "최초 로그인 구분", example = "true, false")
+    private boolean firstLogin;
+
     @Schema(description = "이메일", example = "abcd@gmail.com")
     private String email;
 
@@ -67,7 +70,8 @@ public class Member {
     private Role role;
 
     @Builder
-    private Member(String email, String name, String picture, SocialType socialType, Role role) {
+    private Member(boolean firstLogin, String email, String name, String picture, SocialType socialType, Role role) {
+        this.firstLogin = firstLogin;
         this.email = email;
         this.name = name;
         this.picture = picture;
@@ -83,5 +87,9 @@ public class Member {
         this.targetWeight = onboardingInfoUpdateReqDto.targetWeight();
         this.targetDate = onboardingInfoUpdateReqDto.targetDate();
         this.createDate = onboardingInfoUpdateReqDto.createdDate();
+    }
+
+    public void firstLongUpdate() {
+        this.firstLogin = false;
     }
 }

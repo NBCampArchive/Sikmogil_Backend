@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,16 @@ public class MemberController {
 
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
+    }
+
+    @Operation(summary = "로그인 성공(최초 로그인 구별)", description = "로그인 시에 불러올 api (true: 최초 로그인 O, false: 최초 로그인 X ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 성공"),
+            @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @GetMapping("/success")
+    public RspTemplate<Boolean> isFirstLogin(@AuthenticationPrincipal String email) {
+        return new RspTemplate<>(HttpStatus.OK, "최초 로그인 여부", memberService.memberFirstLogin(email));
     }
 
     @Operation(summary = "온보딩 정보 업데이트", description = "로그인 후 온보딩 정보를 업데이트합니다.")

@@ -17,11 +17,18 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    public boolean memberFirstLogin(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new)
+                .isFirstLogin();
+    }
+
     @Transactional
     public void onboardingInfoUpdate(String email, OnboardingInfoUpdateReqDto onboardingInfoUpdateReqDto) {
         validateDuplicateNickName(onboardingInfoUpdateReqDto.nickname());
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
+        member.firstLongUpdate();
         member.onboardingUpdate(onboardingInfoUpdateReqDto);
     }
 

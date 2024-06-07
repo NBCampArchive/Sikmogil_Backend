@@ -49,6 +49,7 @@ public class AuthMemberService {
                         .picture(userInfo.picture())
                         .socialType(provider)
                         .role(Role.ROLE_USER)
+                        .firstLogin(true)
                         .build()
         );
     }
