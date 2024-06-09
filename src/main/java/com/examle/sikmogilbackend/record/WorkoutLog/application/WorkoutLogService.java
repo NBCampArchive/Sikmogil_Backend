@@ -49,7 +49,7 @@ public class WorkoutLogService {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         WorkoutLog workoutLog = checkExistenceWorkoutLog(member, workoutLogDTO.workoutDate());
-
+        log.info("@@@@@@ = "+workoutLogDTO.toString());
         workoutLog.updateWorkoutLog(workoutLogDTO);
     }
 
