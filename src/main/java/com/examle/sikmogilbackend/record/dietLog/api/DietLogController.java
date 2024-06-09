@@ -16,10 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,7 +45,8 @@ public class DietLogController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/getDietLogDate")
-    public DietLogDTO findDietLogByDietDate(Authentication authentication, String dietDate){
+    public DietLogDTO findDietLogByDietDate(Authentication authentication,
+                                            @RequestBody String dietDate){
         return dietLogService.findDietLogByDietDate(authentication.getName(), dietDate).toDTO();
     }
 
@@ -59,7 +57,8 @@ public class DietLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/updateDietLog")
-    public RspTemplate<String> updateDietLog(Authentication authentication, DietLogDTO dietLog){
+    public RspTemplate<String> updateDietLog(Authentication authentication,
+                                             @RequestBody DietLogDTO dietLog){
         dietLogService.updateDietLog(authentication.getName(), dietLog);
         return new RspTemplate<>(HttpStatus.OK, "식단 업데이트 성공");
     }
@@ -72,7 +71,8 @@ public class DietLogController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/dietList/getDietListByDate")
-    public List<DietListDTO> findFoodListByDate(Authentication authentication, String date){
+    public List<DietListDTO> findFoodListByDate(Authentication authentication,
+                                                @RequestBody String date){
         return dietListService.findDietListByDate(authentication.getName(), date);
     }
 
@@ -83,7 +83,8 @@ public class DietLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/dietList/addDietList")
-    public RspTemplate<String> addDietList(Authentication authentication, String date, DietListDTO dietList){
+    public RspTemplate<String> addDietList(Authentication authentication, String date,
+                                           @RequestBody DietListDTO dietList){
         dietListService.addDietList(authentication.getName(),date,dietList);
         return new RspTemplate<>(HttpStatus.OK, "식단 추가 성공");
     }
@@ -95,7 +96,9 @@ public class DietLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/dietList/deleteDietList")
-    public RspTemplate<String> deleteDietList(Authentication authentication, String date, Long dietListId){
+    public RspTemplate<String> deleteDietList(Authentication authentication,
+                                              @RequestBody String date,
+                                              @RequestBody Long dietListId){
         dietListService.deleteDietList(authentication.getName(),date,dietListId);
         return new RspTemplate<>(HttpStatus.OK, "식단 삭제 성공");
     }
@@ -108,7 +111,8 @@ public class DietLogController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/dietPicture/getDietPictureByDate")
-    public List<DietPictureDTO> findDietPictureByDate(Authentication authentication, String date){
+    public List<DietPictureDTO> findDietPictureByDate(Authentication authentication,
+                                                      @RequestBody String date){
         return dietPictureService.findDietPictureByDate(authentication.getName(), date);
     }
 
@@ -119,7 +123,9 @@ public class DietLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/dietPicture/addDietPicture")
-    public RspTemplate<String> addDietPicture(Authentication authentication, String date, DietPictureDTO dietPictureDTO){
+    public RspTemplate<String> addDietPicture(Authentication authentication,
+                                              @RequestBody String date,
+                                              @RequestBody DietPictureDTO dietPictureDTO) {
         dietPictureService.addDietPicture(authentication.getName(),date, dietPictureDTO);
         return new RspTemplate<>(HttpStatus.OK, "식단 사진 추가 성공");
     }
@@ -131,7 +137,9 @@ public class DietLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/dietPicture/deleteDietPicture")
-    public RspTemplate<String> deleteDietPicture(Authentication authentication, String date, Long dietPictureId){
+    public RspTemplate<String> deleteDietPicture(Authentication authentication,
+                                                 @RequestBody String date,
+                                                 @RequestBody Long dietPictureId){
         dietPictureService.deleteDietPicture(authentication.getName(),date,dietPictureId);
         return new RspTemplate<>(HttpStatus.OK, "식단 삭제 사진 성공");
     }
