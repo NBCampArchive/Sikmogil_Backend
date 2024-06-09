@@ -1,7 +1,5 @@
 package com.examle.sikmogilbackend.record.dietLog.application;
 
-import com.examle.sikmogilbackend.record.Calendar.application.CalendarService;
-import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietListDTO;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietList;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietLog;
@@ -23,16 +21,14 @@ import java.util.stream.Collectors;
 public class DietListService {
     private final DietListRepository dietListRepository;
 
-    private final CalendarService calendarService;
     private final DietLogService dietLogService;
 
     @Transactional
     public List<DietListDTO> findDietListByDate (String email, String date) {
-        Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
 
         List<DietList> dietLists =
-                dietListRepository.findDietListByCalendarAndDietLog(calendar, dietLog);
+                dietListRepository.findDietListByDietLog(dietLog);
 
         return dietLists.stream()
                 .map(DietList::toDTO)
@@ -40,22 +36,19 @@ public class DietListService {
     }
 
     @Transactional
-    public void addDiet(String email, String date, DietListDTO dietListDTO){
-        Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
+    public void addDietList(String email, String date, DietListDTO dietListDTO){
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         DietList dietList = DietList.builder()
-                        .foodPicture(dietListDTO.foodPicture())
                         .mealTime(dietListDTO.mealTime())
                         .calorie(dietListDTO.calorie())
                         .foodName(dietListDTO.foodName())
-                        .calendar(calendar)
                         .dietLog(dietLog)
                         .build();
         dietListRepository.save(dietList);
     }
 
     @Transactional
-    public void deleteDiet(String email, String date, Long dietListId) {
+    public void deleteDietList(String email, String date, Long dietListId) {
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         DietList dietList = dietListRepository.findDietListByDietListId(dietListId).orElseThrow(DietListNotFoundException::new);
         checkEqualsDiet(dietLog, dietList);

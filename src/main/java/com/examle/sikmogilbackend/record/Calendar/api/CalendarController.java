@@ -6,6 +6,12 @@ import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
 import com.examle.sikmogilbackend.record.Calendar.application.CalendarService;
+import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
+import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutListService;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
+import com.examle.sikmogilbackend.record.dietLog.application.DietPictureService;
+import com.examle.sikmogilbackend.record.dietLog.domain.DietPicture;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,7 +35,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CalendarController {
     private final CalendarService calendarService;
-    private final MemberRepository memberRepository;
+    private final DietPictureService dietPictureService;
+    private final WorkoutListService workoutListService;
 
     @Operation(summary = "사용자의 캘린더 내역 출력", description = "사용자의 모든 날짜의 캘린더 내용을 출력합니다.")
     @ApiResponses(value = {
@@ -46,9 +53,13 @@ public class CalendarController {
             @ApiResponse(responseCode = "200", description = "캘린더의 특정 날짜 데이터 출력 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
-    @GetMapping("/getCalenderDate")
+    @GetMapping("/getCalendarDate")
     public CalendarDTO findCalendarByDiaryDate(Authentication authentication, String diaryDate){
-        return calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate).toDTO();
+        Calendar calendar = calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate);
+        List<DietPictureDTO> dietPictureDTOS = dietPictureService.findDietPictureByDate(calendar);
+        List<WorkoutListDTO> workoutListDTOS = workoutListService.findWorkoutListByDate(calendar);
+        CalendarDTO calendarDTO = calendar.toDTO(dietPictureDTOS, workoutListDTOS);
+        return calendarDTO;
     }
 
     @Operation(summary = "특정 날짜의 캘린더 내용 업데이트", description = "특정 날짜의 캘린더 내용을 업데이트합니다.")

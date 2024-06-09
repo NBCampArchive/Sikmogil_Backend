@@ -35,7 +35,7 @@ public class WorkoutLog {
     private Member member;
 
     @OneToMany(mappedBy = "workoutLog", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<CalendarWorkoutLog> calendarDietLogs = new ArrayList<>();
+    private List<WorkoutList> workoutLists = new ArrayList<>();
 
     public WorkoutLogDTO toDTO(){
         return WorkoutLogDTO.builder()
