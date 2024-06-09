@@ -21,10 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +51,8 @@ public class CalendarController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/getCalendarDate")
-    public CalendarDTO findCalendarByDiaryDate(Authentication authentication, String diaryDate){
+    public CalendarDTO findCalendarByDiaryDate(Authentication authentication,
+                                               @RequestBody String diaryDate){
         Calendar calendar = calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate);
         List<DietPictureDTO> dietPictureDTOS = dietPictureService.findDietPictureByDate(calendar);
         List<WorkoutListDTO> workoutListDTOS = workoutListService.findWorkoutListByDate(calendar);
@@ -69,7 +67,8 @@ public class CalendarController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/UpdateCalendar")
-    public RspTemplate<String> updateCalendar(Authentication authentication, CalendarDTO calendar){
+    public RspTemplate<String> updateCalendar(Authentication authentication,
+                                              @RequestBody CalendarDTO calendar){
         calendarService.UpdateCalendar(authentication.getName(), calendar);
         return new RspTemplate<>(HttpStatus.OK, "온보딩");
     }

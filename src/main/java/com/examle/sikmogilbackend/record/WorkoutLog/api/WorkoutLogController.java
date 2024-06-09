@@ -15,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,7 +43,8 @@ public class WorkoutLogController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/getWorkoutLogDate")
-    public WorkoutLogDTO findWorkoutLogByWorkoutDate(Authentication authentication, String workoutDate){
+    public WorkoutLogDTO findWorkoutLogByWorkoutDate(Authentication authentication,
+                                                     @RequestBody String workoutDate){
         return workoutLogService.findWorkoutLogByWorkoutDate(authentication.getName(), workoutDate).toDTO();
     }
 
@@ -57,7 +55,8 @@ public class WorkoutLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/updateWorkoutLog")
-    public RspTemplate<String> updateWorkoutLog(Authentication authentication, WorkoutLogDTO workoutLog){
+    public RspTemplate<String> updateWorkoutLog(Authentication authentication,
+                                                @RequestBody WorkoutLogDTO workoutLog){
         workoutLogService.updateWorkoutLog(authentication.getName(), workoutLog);
         return new RspTemplate<>(HttpStatus.OK, "운동 업데이트 성공");
     }
@@ -70,7 +69,8 @@ public class WorkoutLogController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/workoutList/getWorkoutListByDate")
-    public List<WorkoutListDTO> findWorkoutListByDate(Authentication authentication, String date){
+    public List<WorkoutListDTO> findWorkoutListByDate(Authentication authentication,
+                                                      @RequestBody String date){
         return workoutListService.findWorkoutListByDate(authentication.getName(), date);
     }
 
@@ -81,7 +81,9 @@ public class WorkoutLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/workoutList/addWorkoutList")
-    public RspTemplate<String> addWorkoutList(Authentication authentication, String date, WorkoutListDTO workoutList){
+    public RspTemplate<String> addWorkoutList(Authentication authentication,
+                                              @RequestBody String date,
+                                              @RequestBody WorkoutListDTO workoutList){
         workoutListService.addWorkoutList(authentication.getName(),date, workoutList);
         return new RspTemplate<>(HttpStatus.OK, "운동 리스트 추가 성공");
     }
@@ -93,7 +95,9 @@ public class WorkoutLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/workoutList/deleteWorkoutList")
-    public RspTemplate<String> deleteDietPicture(Authentication authentication, String date, Long workoutListId){
+    public RspTemplate<String> deleteDietPicture(Authentication authentication,
+                                                 @RequestBody String date,
+                                                 @RequestBody Long workoutListId){
         workoutListService.deleteWorkoutList(authentication.getName(),date,workoutListId);
         return new RspTemplate<>(HttpStatus.OK, "운동 리스트 사진 성공");
     }
