@@ -1,4 +1,10 @@
 spring:
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: ${GOOGLE_APPLICATION_CREDENTIALS}
+    project-id: ${ spring.cloud.project-id }
   profiles:
     active: prod
 
@@ -16,6 +22,11 @@ spring:
         show_sql: true
         format_sql: true
     open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 60MB
 
 logging:
   level:
