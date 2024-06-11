@@ -83,7 +83,8 @@ public class DietLogController {
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/dietList/addDietList")
-    public RspTemplate<String> addDietList(Authentication authentication, String date,
+    public RspTemplate<String> addDietList(Authentication authentication,
+                                           @RequestBody String date,
                                            @RequestBody DietListDTO dietList){
         dietListService.addDietList(authentication.getName(),date,dietList);
         return new RspTemplate<>(HttpStatus.OK, "식단 추가 성공");
