@@ -45,6 +45,18 @@ public class CalendarController {
         return calendarService.findByMemberIdCalendar(authentication.getName());
     }
 
+    @Operation(summary = "사용자의 캘린더 내역 출력", description = "사용자의 모든 날짜의 캘린더 내용을 출력합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "캘린더 데이터 출력 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
+    })
+    @GetMapping("/getWeek")
+    public MainCalendarDTO searchWeekWeightAndTargetWeight(Authentication authentication
+                                               @RequestBody String date){
+        return calendarService.searchWeekWeightAndTargetWeight(authentication.getName(), date);
+    }
+
+
     @Operation(summary = "캘린더의 특정 날짜 데이터 출력", description = "특정 날짜의 내용을 출력합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "캘린더의 특정 날짜 데이터 출력 성공"),

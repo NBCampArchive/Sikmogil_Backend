@@ -65,6 +65,13 @@ public class Calendar {
                 .build();
     }
 
+    public WeekWeightDTO toWeekDTO(){
+        return CalendarDTO.builder()
+                .date(diaryDate)
+                .weight(diaryWeight)
+                .build();
+    }
+
     public void updateCalendar(CalendarDTO calendarDTO){
         this.diaryWeight = calendarDTO.diaryWeight();
         this.diaryDate = calendarDTO.diaryDate();

@@ -39,6 +39,22 @@ public class CalendarService {
     }
 
     @Transactional
+    public MainCalendarDTO searchWeekWeightAndTargetWeight (String email, String date) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        List<Calendar> calendars =
+                calendarRepository.findByMember(member);
+        List<WeekWeightDTO> weekWeights = calendars.stream()
+                .map(Calendar::toWeekDTO)
+                .collect(Collectors.toList());
+
+        return MainCalendarDTO.builder()
+                .targetDate(member.getTargetDate())
+                .targetWeight(member.getTargetWeight())
+                .weekWeights(weekWeights)
+                .build();
+    }
+
+    @Transactional
     public Calendar findCalendarByDiaryDate (String email, String diaryDate) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
