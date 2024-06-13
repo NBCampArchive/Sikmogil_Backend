@@ -46,7 +46,7 @@ public class DietLogController {
     })
     @GetMapping("/getDietLogDate")
     public DietLogDTO findDietLogByDietDate(Authentication authentication,
-                                            @RequestBody String dietDate){
+                                            @RequestParam String dietDate){
         return dietLogService.findDietLogByDietDate(authentication.getName(), dietDate).toDTO();
     }
 
@@ -72,7 +72,7 @@ public class DietLogController {
     })
     @GetMapping("/dietList/getDietListByDate")
     public List<DietListDTO> findFoodListByDate(Authentication authentication,
-                                                @RequestBody String date){
+                                                @RequestParam String date){
         return dietListService.findDietListByDate(authentication.getName(), date);
     }
 
@@ -84,7 +84,7 @@ public class DietLogController {
     })
     @PostMapping("/dietList/addDietList")
     public RspTemplate<String> addDietList(Authentication authentication,
-                                           @RequestBody String date,
+                                           @RequestParam String date,
                                            @RequestBody DietListDTO dietList){
         dietListService.addDietList(authentication.getName(),date,dietList);
         return new RspTemplate<>(HttpStatus.OK, "식단 추가 성공");
@@ -98,8 +98,8 @@ public class DietLogController {
     })
     @PostMapping("/dietList/deleteDietList")
     public RspTemplate<String> deleteDietList(Authentication authentication,
-                                              @RequestBody String date,
-                                              @RequestBody Long dietListId){
+                                              @RequestParam String date,
+                                              @RequestParam Long dietListId){
         dietListService.deleteDietList(authentication.getName(),date,dietListId);
         return new RspTemplate<>(HttpStatus.OK, "식단 삭제 성공");
     }
@@ -113,7 +113,7 @@ public class DietLogController {
     })
     @GetMapping("/dietPicture/getDietPictureByDate")
     public List<DietPictureDTO> findDietPictureByDate(Authentication authentication,
-                                                      @RequestBody String date){
+                                                      @RequestParam String date){
         return dietPictureService.findDietPictureByDate(authentication.getName(), date);
     }
 
@@ -125,7 +125,7 @@ public class DietLogController {
     })
     @PostMapping("/dietPicture/addDietPicture")
     public RspTemplate<String> addDietPicture(Authentication authentication,
-                                              @RequestBody String date,
+                                              @RequestParam String date,
                                               @RequestBody DietPictureDTO dietPictureDTO) {
         dietPictureService.addDietPicture(authentication.getName(),date, dietPictureDTO);
         return new RspTemplate<>(HttpStatus.OK, "식단 사진 추가 성공");
@@ -139,8 +139,8 @@ public class DietLogController {
     })
     @PostMapping("/dietPicture/deleteDietPicture")
     public RspTemplate<String> deleteDietPicture(Authentication authentication,
-                                                 @RequestBody String date,
-                                                 @RequestBody Long dietPictureId){
+                                                 @RequestParam String date,
+                                                 @RequestParam Long dietPictureId){
         dietPictureService.deleteDietPicture(authentication.getName(),date,dietPictureId);
         return new RspTemplate<>(HttpStatus.OK, "식단 삭제 사진 성공");
     }

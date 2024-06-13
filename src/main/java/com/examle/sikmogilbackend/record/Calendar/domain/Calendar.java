@@ -2,6 +2,7 @@ package com.examle.sikmogilbackend.record.Calendar.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
+import com.examle.sikmogilbackend.record.Calendar.api.dto.WeekWeightDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
@@ -62,6 +63,13 @@ public class Calendar {
                 .diaryWeight(diaryWeight)
                 .dietPictures(dietPictureDTOS)
                 .workoutLists(workoutListDTOS)
+                .build();
+    }
+
+    public WeekWeightDTO toWeekDTO(){
+        return WeekWeightDTO.builder()
+                .date(diaryDate)
+                .weight(diaryWeight)
                 .build();
     }
 
