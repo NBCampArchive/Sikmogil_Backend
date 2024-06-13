@@ -7,7 +7,7 @@ public record OnboardingInfoUpdateReqDto(
         String gender,
         String targetWeight,
         String targetDate,
-
+        Long canEatCalorie,
         String createdDate
 ) {
 }

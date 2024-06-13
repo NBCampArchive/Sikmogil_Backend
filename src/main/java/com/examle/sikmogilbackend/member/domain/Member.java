@@ -62,6 +62,9 @@ public class Member {
     @Schema(description = "목표 날짜", example = "2024.06.02")
     private String targetDate;
 
+    @Schema(description = "먹을 수 있는 칼로리", example = "1000")
+    private Long canEatCalorie;
+
     @Schema(description = "생성 날짜", example = "2024.06.02")
     protected String createDate;
 
@@ -87,6 +90,7 @@ public class Member {
         this.targetWeight = onboardingInfoUpdateReqDto.targetWeight();
         this.targetDate = onboardingInfoUpdateReqDto.targetDate();
         this.createDate = onboardingInfoUpdateReqDto.createdDate();
+        this.canEatCalorie = onboardingInfoUpdateReqDto.canEatCalorie();
     }
 
     public void firstLongUpdate() {

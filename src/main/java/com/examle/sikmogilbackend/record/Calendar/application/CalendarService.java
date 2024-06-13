@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,10 +51,17 @@ public class CalendarService {
                 .map(Calendar::toWeekDTO)
                 .collect(Collectors.toList());
 
+        log.info("sort = "+weekWeights.toString());
+
+        Collections.sort( weekWeights, (o1, o2) -> o2.date().compareTo(o1.date()));
+
+        log.info("sort = "+weekWeights.toString());
+
+
         return MainCalendarDTO.builder()
                 .targetDate(member.getTargetDate())
                 .targetWeight(member.getTargetWeight())
-                .weekWeights(weekWeights)
+                .weekWeights(weekWeights.subList(0,7))
                 .build();
     }
 
