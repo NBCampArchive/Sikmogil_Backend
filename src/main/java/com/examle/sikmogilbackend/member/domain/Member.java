@@ -93,6 +93,19 @@ public class Member {
         this.canEatCalorie = onboardingInfoUpdateReqDto.canEatCalorie();
     }
 
+    public OnboardingInfoUpdateReqDto toDTO(){
+        return OnboardingInfoUpdateReqDto.builder()
+                .nickname(nickname)
+                .height(height)
+                .weight(weight)
+                .gender(gender)
+                .targetDate(targetDate)
+                .targetWeight(targetWeight)
+                .createdDate(createDate)
+                .canEatCalorie(canEatCalorie)
+                .build();
+    }
+
     public void firstLongUpdate() {
         this.firstLogin = false;
     }

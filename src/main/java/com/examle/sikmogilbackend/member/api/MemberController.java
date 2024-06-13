@@ -48,4 +48,15 @@ public class MemberController {
         return new RspTemplate<>(HttpStatus.OK, "온보딩");
     }
 
+    @Operation(summary = "온보딩 정보 출력", description = "온보딩 정보를 출력합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "온보딩 정보 출력 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
+            @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @GetMapping("/getMember")
+    public RspTemplate<OnboardingInfoUpdateReqDto> findMember(@AuthenticationPrincipal String email) {
+        return new RspTemplate<>(HttpStatus.OK, "온보딩 정보 출력", memberService.findMember(email).toDTO());
+    }
+
 }

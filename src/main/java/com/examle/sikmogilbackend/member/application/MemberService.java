@@ -23,6 +23,10 @@ public class MemberService {
                 .isFirstLogin();
     }
 
+    public Member findMember(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    }
+
     @Transactional
     public void onboardingInfoUpdate(String email, OnboardingInfoUpdateReqDto onboardingInfoUpdateReqDto) {
         validateDuplicateNickName(onboardingInfoUpdateReqDto.nickname());
