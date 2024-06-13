@@ -1,6 +1,10 @@
 package com.examle.sikmogilbackend.record.dietLog.api;
 
 import com.examle.sikmogilbackend.global.template.RspTemplate;
+import com.examle.sikmogilbackend.member.application.MemberService;
+import com.examle.sikmogilbackend.member.domain.Member;
+import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
+import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietListDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
@@ -29,6 +33,8 @@ public class DietLogController {
     private final DietListService dietListService;
     private final DietPictureService dietPictureService;
 
+    private final MemberRepository memberRepository;
+
     @Operation(summary = "사용자의 모든 식단 내역 출력", description = "사용자의 모든 식단 내용을 출력합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "식단 데이터 출력 성공"),
@@ -47,7 +53,8 @@ public class DietLogController {
     @GetMapping("/getDietLogDate")
     public DietLogDTO findDietLogByDietDate(Authentication authentication,
                                             @RequestParam String dietDate){
-        return dietLogService.findDietLogByDietDate(authentication.getName(), dietDate).toDTO();
+        Member member = memberRepository.findByEmail(authentication.getName()).orElseThrow(MemberNotFoundException::new);
+        return dietLogService.findDietLogByDietDate(authentication.getName(), dietDate).toDTO(member.getCanEatCalorie());
     }
 
     @Operation(summary = "특정 날짜의 식단 내용 업데이트", description = "특정 날짜의 식단을 업데이트합니다.")

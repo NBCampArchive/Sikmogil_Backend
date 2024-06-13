@@ -45,6 +45,15 @@ public class DietLog {
                 .build();
     }
 
+    public DietLogDTO toDTO(Long canEatCalorie){
+        return DietLogDTO.builder()
+                .canEatCalorie(canEatCalorie)
+                .waterIntake(waterIntake)
+                .totalCalorieEaten(totalCalorieEaten)
+                .dietDate(dietDate)
+                .build();
+    }
+
     public void updateDietLog(DietLogDTO dietLogDTO){
         this.dietDate = dietLogDTO.dietDate();
         this.waterIntake = dietLogDTO.waterIntake();
