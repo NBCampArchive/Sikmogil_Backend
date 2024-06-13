@@ -82,9 +82,8 @@ public class WorkoutLogController {
     })
     @PostMapping("/workoutList/addWorkoutList")
     public RspTemplate<String> addWorkoutList(Authentication authentication,
-                                              @RequestParam String date,
                                               @RequestBody WorkoutListDTO workoutList){
-        workoutListService.addWorkoutList(authentication.getName(),date, workoutList);
+        workoutListService.addWorkoutList(authentication.getName(), workoutList.date(), workoutList);
         return new RspTemplate<>(HttpStatus.OK, "운동 리스트 추가 성공");
     }
 

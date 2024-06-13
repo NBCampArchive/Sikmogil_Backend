@@ -5,6 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record WorkoutListDTO(
+        String date,
         Long workoutListId,
         String performedWorkout,
         Long workoutTime,

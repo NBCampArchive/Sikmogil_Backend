@@ -1,5 +1,8 @@
 package com.examle.sikmogilbackend.member.api.dto.reqeust;
 
+import lombok.Builder;
+
+@Builder
 public record OnboardingInfoUpdateReqDto(
         String nickname,
         String height,
@@ -7,7 +10,7 @@ public record OnboardingInfoUpdateReqDto(
         String gender,
         String targetWeight,
         String targetDate,
-
+        Long canEatCalorie,
         String createdDate
 ) {
 }
