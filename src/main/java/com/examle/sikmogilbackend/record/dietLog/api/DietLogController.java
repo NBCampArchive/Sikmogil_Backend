@@ -91,9 +91,8 @@ public class DietLogController {
     })
     @PostMapping("/dietList/addDietList")
     public RspTemplate<String> addDietList(Authentication authentication,
-                                           @RequestParam String date,
                                            @RequestBody DietListDTO dietList){
-        dietListService.addDietList(authentication.getName(),date,dietList);
+        dietListService.addDietList(authentication.getName(), dietList.date(), dietList);
         return new RspTemplate<>(HttpStatus.OK, "식단 추가 성공");
     }
 
@@ -132,9 +131,8 @@ public class DietLogController {
     })
     @PostMapping("/dietPicture/addDietPicture")
     public RspTemplate<String> addDietPicture(Authentication authentication,
-                                              @RequestParam String date,
                                               @RequestBody DietPictureDTO dietPictureDTO) {
-        dietPictureService.addDietPicture(authentication.getName(),date, dietPictureDTO);
+        dietPictureService.addDietPicture(authentication.getName(), dietPictureDTO.date(), dietPictureDTO);
         return new RspTemplate<>(HttpStatus.OK, "식단 사진 추가 성공");
     }
 

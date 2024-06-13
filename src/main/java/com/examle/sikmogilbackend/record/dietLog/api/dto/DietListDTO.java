@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record DietListDTO(
+        String date,
         Long dietListId,
         Long calorie,
         String foodName,
