@@ -73,10 +73,24 @@ public class CalendarController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
-    @PostMapping("/UpdateCalendar")
+    @PostMapping("/updateCalendar")
     public RspTemplate<String> updateCalendar(Authentication authentication,
                                               @RequestBody CalendarDTO calendar){
         calendarService.UpdateCalendar(authentication.getName(), calendar);
         return new RspTemplate<>(HttpStatus.OK, "캘린더 데이터 입력 성공");
+    }
+
+    @Operation(summary = "특정 날짜의 몸무게 업데이트", description = "특정 날짜의 몸무게를 업데이트합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 날짜의 몸무게 저장 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
+            @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @PostMapping("/updateWeight")
+    public RspTemplate<String> updateWeight(Authentication authentication,
+                                              @RequestParam String date,
+                                              @RequestParam Long weight){
+        calendarService.updateWeight(authentication.getName(), date, weight);
+        return new RspTemplate<>(HttpStatus.OK, "특정 날짜의 몸무게 저장 성공");
     }
 }

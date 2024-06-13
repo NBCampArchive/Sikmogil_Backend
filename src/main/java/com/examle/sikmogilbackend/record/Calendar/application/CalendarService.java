@@ -84,6 +84,15 @@ public class CalendarService {
     }
 
     @Transactional
+    public void updateWeight (String email, String date, Long weight) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+
+        Calendar calendar = checkExistenceCalendar(member, date);
+
+        calendar.updateWeight(weight);
+    }
+
+    @Transactional
     public void createCalendar (Member member, String diaryDate) {
         log.info("캘린더 생성@@@@@@@@@@@@@");
         calendarRepository.save(

@@ -74,9 +74,12 @@ public class Calendar {
     }
 
     public void updateCalendar(CalendarDTO calendarDTO){
-        this.diaryWeight = calendarDTO.diaryWeight();
         this.diaryDate = calendarDTO.diaryDate();
         this.diaryText = calendarDTO.diaryText();
+    }
+
+    public void updateWeight(Long weight){
+        this.diaryWeight = weight;
     }
 
 
