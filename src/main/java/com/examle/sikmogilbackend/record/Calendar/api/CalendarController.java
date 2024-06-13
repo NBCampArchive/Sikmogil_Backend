@@ -1,17 +1,14 @@
 package com.examle.sikmogilbackend.record.Calendar.api;
 
 import com.examle.sikmogilbackend.global.template.RspTemplate;
-import com.examle.sikmogilbackend.member.domain.Member;
-import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
-import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
+import com.examle.sikmogilbackend.record.Calendar.api.dto.MainCalendarDTO;
 import com.examle.sikmogilbackend.record.Calendar.application.CalendarService;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutListService;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.application.DietPictureService;
-import com.examle.sikmogilbackend.record.dietLog.domain.DietPicture;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -51,9 +47,8 @@ public class CalendarController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/getWeek")
-    public MainCalendarDTO searchWeekWeightAndTargetWeight(Authentication authentication
-                                               @RequestBody String date){
-        return calendarService.searchWeekWeightAndTargetWeight(authentication.getName(), date);
+    public MainCalendarDTO searchWeekWeightAndTargetWeight(Authentication authentication){
+        return calendarService.searchWeekWeightAndTargetWeight(authentication.getName());
     }
 
 
@@ -64,7 +59,7 @@ public class CalendarController {
     })
     @GetMapping("/getCalendarDate")
     public CalendarDTO findCalendarByDiaryDate(Authentication authentication,
-                                               @RequestBody String diaryDate){
+                                               @RequestParam String diaryDate){
         Calendar calendar = calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate);
         List<DietPictureDTO> dietPictureDTOS = dietPictureService.findDietPictureByDate(calendar);
         List<WorkoutListDTO> workoutListDTOS = workoutListService.findWorkoutListByDate(calendar);
@@ -82,6 +77,6 @@ public class CalendarController {
     public RspTemplate<String> updateCalendar(Authentication authentication,
                                               @RequestBody CalendarDTO calendar){
         calendarService.UpdateCalendar(authentication.getName(), calendar);
-        return new RspTemplate<>(HttpStatus.OK, "온보딩");
+        return new RspTemplate<>(HttpStatus.OK, "캘린더 데이터 입력 성공");
     }
 }

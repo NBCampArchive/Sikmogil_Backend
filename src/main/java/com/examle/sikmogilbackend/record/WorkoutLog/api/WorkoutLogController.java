@@ -44,7 +44,7 @@ public class WorkoutLogController {
     })
     @GetMapping("/getWorkoutLogDate")
     public WorkoutLogDTO findWorkoutLogByWorkoutDate(Authentication authentication,
-                                                     @RequestBody String workoutDate){
+                                                     @RequestParam String workoutDate){
         return workoutLogService.findWorkoutLogByWorkoutDate(authentication.getName(), workoutDate).toDTO();
     }
 
@@ -70,7 +70,7 @@ public class WorkoutLogController {
     })
     @GetMapping("/workoutList/getWorkoutListByDate")
     public List<WorkoutListDTO> findWorkoutListByDate(Authentication authentication,
-                                                      @RequestBody String date){
+                                                      @RequestParam String date){
         return workoutListService.findWorkoutListByDate(authentication.getName(), date);
     }
 
@@ -82,7 +82,7 @@ public class WorkoutLogController {
     })
     @PostMapping("/workoutList/addWorkoutList")
     public RspTemplate<String> addWorkoutList(Authentication authentication,
-                                              @RequestBody String date,
+                                              @RequestParam String date,
                                               @RequestBody WorkoutListDTO workoutList){
         workoutListService.addWorkoutList(authentication.getName(),date, workoutList);
         return new RspTemplate<>(HttpStatus.OK, "운동 리스트 추가 성공");
@@ -96,8 +96,8 @@ public class WorkoutLogController {
     })
     @PostMapping("/workoutList/deleteWorkoutList")
     public RspTemplate<String> deleteDietPicture(Authentication authentication,
-                                                 @RequestBody String date,
-                                                 @RequestBody Long workoutListId){
+                                                 @RequestParam String date,
+                                                 @RequestParam Long workoutListId){
         workoutListService.deleteWorkoutList(authentication.getName(),date,workoutListId);
         return new RspTemplate<>(HttpStatus.OK, "운동 리스트 사진 성공");
     }

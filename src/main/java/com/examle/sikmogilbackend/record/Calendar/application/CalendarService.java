@@ -5,6 +5,8 @@ import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.member.exception.ExistsNickNameException;
 import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
+import com.examle.sikmogilbackend.record.Calendar.api.dto.MainCalendarDTO;
+import com.examle.sikmogilbackend.record.Calendar.api.dto.WeekWeightDTO;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import com.examle.sikmogilbackend.record.Calendar.domain.repository.CalendarRepository;
 import com.examle.sikmogilbackend.record.Calendar.exception.CalendarNotFoundException;
@@ -39,7 +41,7 @@ public class CalendarService {
     }
 
     @Transactional
-    public MainCalendarDTO searchWeekWeightAndTargetWeight (String email, String date) {
+    public MainCalendarDTO searchWeekWeightAndTargetWeight (String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<Calendar> calendars =
                 calendarRepository.findByMember(member);
