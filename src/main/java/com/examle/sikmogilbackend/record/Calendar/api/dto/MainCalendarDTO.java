@@ -9,6 +9,7 @@ public record MainCalendarDTO(
         String createDate,
         String targetDate,
         String targetWeight,
+        String weight,
         List<WeekWeightDTO> weekWeights
 ) {
 }
