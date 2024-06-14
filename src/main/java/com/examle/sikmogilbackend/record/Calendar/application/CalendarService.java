@@ -59,6 +59,7 @@ public class CalendarService {
 
 
         return MainCalendarDTO.builder()
+                .createDate(member.getCreateDate())
                 .targetDate(member.getTargetDate())
                 .targetWeight(member.getTargetWeight())
                 .weekWeights(weekWeights.subList(0,7))
