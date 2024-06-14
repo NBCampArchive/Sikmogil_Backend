@@ -62,7 +62,8 @@ public class CalendarService {
                 .createDate(member.getCreateDate())
                 .targetDate(member.getTargetDate())
                 .targetWeight(member.getTargetWeight())
-                .weekWeights(weekWeights.subList(0,7))
+                .weight(member.getWeight())
+                .weekWeights(weekWeights.size() < 7?weekWeights:weekWeights.subList(0,7))
                 .build();
     }
 
