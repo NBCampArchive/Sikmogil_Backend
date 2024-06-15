@@ -13,6 +13,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Builder
@@ -53,6 +54,14 @@ public class Calendar {
                 .diaryDate(diaryDate)
                 .diaryText(diaryText)
                 .diaryWeight(diaryWeight)
+                .workoutLists(workoutLists.stream()
+                        .map(WorkoutList::toDTO)
+                        .collect(Collectors.toList())
+                )
+                .dietPictures(dietPictures.stream()
+                        .map(DietPicture::toDTO)
+                        .collect(Collectors.toList())
+                )
                 .build();
     }
 

@@ -24,13 +24,13 @@ public class GcsController {
     private final GcsService gcsService;
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public RspTemplate<String> update(
+    public RspTemplate<List<String>> update(
             Authentication authentication,
             @RequestParam String directory,
             @ModelAttribute List<MultipartFile> image
     ) throws IOException {
         log.info("dto = " + directory);
-        gcsService.uploadGCS(authentication.getName(), directory, image);
-        return new RspTemplate<>(HttpStatus.OK, "사진 등록 성공");
+        List<String> result = gcsService.uploadGCS(authentication.getName(), directory, image);
+        return new RspTemplate<>(HttpStatus.OK, "사진 등록 성공",result);
     }
 }
