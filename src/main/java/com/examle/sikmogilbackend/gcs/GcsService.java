@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -22,7 +23,8 @@ public class GcsService {
 
 
     @Transactional
-    public void uploadGCS(String email, String directory, List<MultipartFile> images) throws IOException {
+    public List<String> uploadGCS(String email, String directory, List<MultipartFile> images) throws IOException {
+        List<String> result = new ArrayList<>();
         // !!!!!!!!!!!이미지 업로드 관련 부분!!!!!!!!!!!!!!!
         for (MultipartFile image : images) {
             log.info("image = " + image.getOriginalFilename());
@@ -36,7 +38,9 @@ public class GcsService {
                             .build(),
                     image.getInputStream()
             );
+            result.add("https://storage.googleapis.com/sikmogil/"+directory+"/"+email+ "/"+image.getOriginalFilename());
         }
+        return result;
     }
 
 }
