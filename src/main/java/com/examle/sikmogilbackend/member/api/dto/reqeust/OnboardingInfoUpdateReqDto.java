@@ -11,6 +11,8 @@ public record OnboardingInfoUpdateReqDto(
         String targetWeight,
         String targetDate,
         Long canEatCalorie,
-        String createdDate
+        String createdDate,
+        String remindTime
+
 ) {
 }

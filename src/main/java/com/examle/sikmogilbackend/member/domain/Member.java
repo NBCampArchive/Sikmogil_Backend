@@ -68,6 +68,9 @@ public class Member {
     @Schema(description = "생성 날짜", example = "2024.06.02")
     protected String createDate;
 
+    @Schema(description = "알림 시간", example = "22:00")
+    protected String remindTime;
+
     @Enumerated(EnumType.STRING)
     @Schema(description = "권한", example = "ROLE_USER")
     private Role role;
@@ -91,6 +94,7 @@ public class Member {
         this.targetDate = onboardingInfoUpdateReqDto.targetDate();
         this.createDate = onboardingInfoUpdateReqDto.createdDate();
         this.canEatCalorie = onboardingInfoUpdateReqDto.canEatCalorie();
+        this.remindTime = onboardingInfoUpdateReqDto.remindTime();
     }
 
     public OnboardingInfoUpdateReqDto toDTO(){
@@ -103,6 +107,7 @@ public class Member {
                 .targetWeight(targetWeight)
                 .createdDate(createDate)
                 .canEatCalorie(canEatCalorie)
+                .remindTime(remindTime)
                 .build();
     }
 
