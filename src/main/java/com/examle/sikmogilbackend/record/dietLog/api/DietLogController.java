@@ -159,8 +159,8 @@ public class DietLogController {
             @ApiResponse(responseCode = "200", description = "식단 사진 출력 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
-    @GetMapping("/findWorkoutPictures")
-    public List<DietPictureDTO> findWorkoutPictures(Authentication authentication){
+    @GetMapping("/findDietPictures")
+    public List<DietPictureDTO> findDietPictures(Authentication authentication){
         return dietPictureService.findDietPictures(authentication.getName()).stream()
                 .map(DietPicture::toDTO)
                 .collect(Collectors.toList());
