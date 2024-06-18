@@ -8,6 +8,7 @@ import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutListService;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutLogService;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
+import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutLog;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -38,7 +40,11 @@ public class WorkoutLogController {
     })
     @GetMapping("")
     public List<WorkoutLogDTO> findByMemberIdWorkoutLog(Authentication authentication){
-        return workoutLogService.findByMemberIdWorkoutLog(authentication.getName());
+        return workoutLogService.findByMemberIdWorkoutLog(
+                authentication.getName()).stream()
+                .map(WorkoutLog::toDTO)
+                .collect(Collectors.toList()
+                );
     }
 
     @Operation(summary = "운동의 특정 날짜 데이터 출력", description = "특정 날짜의 내용을 출력합니다.")
@@ -104,5 +110,17 @@ public class WorkoutLogController {
                                                  @RequestParam Long workoutListId){
         workoutListService.deleteWorkoutList(authentication.getName(),date,workoutListId);
         return new RspTemplate<>(HttpStatus.OK, "운동 리스트 사진 성공");
+    }
+
+    @Operation(summary = "운동 사진 출력", description = "운동 사진을 모두 출력합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "운동 사진 출력 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
+    })
+    @GetMapping("/findWorkoutPictures")
+    public List<WorkoutListDTO> findWorkoutPictures(Authentication authentication){
+        return workoutListService.findWorkoutPictures(authentication.getName()).stream()
+                .map(WorkoutList::toDTO)
+                .collect(Collectors.toList());
     }
 }

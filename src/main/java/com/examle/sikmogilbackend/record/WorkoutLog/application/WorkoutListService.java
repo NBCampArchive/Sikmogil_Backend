@@ -1,8 +1,12 @@
 package com.examle.sikmogilbackend.record.WorkoutLog.application;
 
+import com.examle.sikmogilbackend.member.application.MemberService;
+import com.examle.sikmogilbackend.member.domain.Member;
+import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.record.Calendar.application.CalendarService;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutLog;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.repository.WorkoutListRepository;
@@ -24,6 +28,9 @@ public class WorkoutListService {
     private final WorkoutListRepository workoutListRepository;
     private final CalendarService calendarService;
     private final WorkoutLogService workoutLogService;
+
+    private final MemberService memberService;
+
     @Transactional
     public List<WorkoutListDTO> findWorkoutListByDate (String email, String date) {
         Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
@@ -40,6 +47,14 @@ public class WorkoutListService {
         List<WorkoutList> workoutLists = workoutListRepository.findWorkoutListsByCalendar(calendar);
         return workoutLists.stream()
                 .map(WorkoutList::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<WorkoutList> findWorkoutPictures(String email) {
+        Member member = memberService.findMember(email);
+        return member.getCalendars().stream()
+                .flatMap(calendar -> calendar.getWorkoutLists().stream())
                 .collect(Collectors.toList());
     }
 
