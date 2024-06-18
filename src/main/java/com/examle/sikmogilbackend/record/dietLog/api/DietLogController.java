@@ -5,12 +5,15 @@ import com.examle.sikmogilbackend.member.application.MemberService;
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
+import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietListDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.application.DietListService;
 import com.examle.sikmogilbackend.record.dietLog.application.DietLogService;
 import com.examle.sikmogilbackend.record.dietLog.application.DietPictureService;
+import com.examle.sikmogilbackend.record.dietLog.domain.DietPicture;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -148,6 +152,18 @@ public class DietLogController {
                                                  @RequestParam Long dietPictureId){
         dietPictureService.deleteDietPicture(authentication.getName(),date,dietPictureId);
         return new RspTemplate<>(HttpStatus.OK, "식단 삭제 사진 성공");
+    }
+
+    @Operation(summary = "식단 사진 출력", description = "식단 사진을 모두 출력합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "식단 사진 출력 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
+    })
+    @GetMapping("/findWorkoutPictures")
+    public List<DietPictureDTO> findWorkoutPictures(Authentication authentication){
+        return dietPictureService.findDietPictures(authentication.getName()).stream()
+                .map(DietPicture::toDTO)
+                .collect(Collectors.toList());
     }
 
 }

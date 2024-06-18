@@ -1,8 +1,11 @@
 package com.examle.sikmogilbackend.record.dietLog.application;
 
+import com.examle.sikmogilbackend.member.application.MemberService;
+import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.Calendar.application.CalendarService;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import com.examle.sikmogilbackend.record.Calendar.domain.repository.CalendarRepository;
+import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietListDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietList;
@@ -30,6 +33,7 @@ public class DietPictureService {
     private final DietPictureRepository dietPictureRepository;
     private final CalendarService calendarService;
     private final DietLogService dietLogService;
+    private final MemberService memberService;
 
     @Transactional
     public List<DietPictureDTO> findDietPictureByDate (String email, String date) {
@@ -47,6 +51,14 @@ public class DietPictureService {
         List<DietPicture> dietPictures = dietPictureRepository.findByCalendar(calendar);
         return dietPictures.stream()
                 .map(DietPicture::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<DietPicture> findDietPictures(String email) {
+        Member member = memberService.findMember(email);
+        return member.getCalendars().stream()
+                .flatMap(calendar -> calendar.getDietPictures().stream())
                 .collect(Collectors.toList());
     }
 
