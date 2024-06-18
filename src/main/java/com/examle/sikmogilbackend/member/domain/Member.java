@@ -99,6 +99,7 @@ public class Member {
 
     public OnboardingInfoUpdateReqDto toDTO(){
         return OnboardingInfoUpdateReqDto.builder()
+                .picture(picture)
                 .nickname(nickname)
                 .height(height)
                 .weight(weight)

@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record OnboardingInfoUpdateReqDto(
+        String picture,
         String nickname,
         String height,
         String weight,
