@@ -1,6 +1,8 @@
 package com.examle.sikmogilbackend.record.WorkoutLog.api;
 
 import com.examle.sikmogilbackend.global.template.RspTemplate;
+import com.examle.sikmogilbackend.member.application.MemberService;
+import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutListService;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.mapper.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,7 @@ import java.util.List;
 public class WorkoutLogController {
     private final WorkoutLogService workoutLogService;
     private final WorkoutListService workoutListService;
+    private final MemberService memberService;
 
     @Operation(summary = "사용자의 모든 운동 내역 출력", description = "사용자의 모든 운동 내용을 출력합니다.")
     @ApiResponses(value = {
@@ -45,7 +49,8 @@ public class WorkoutLogController {
     @GetMapping("/getWorkoutLogDate")
     public WorkoutLogDTO findWorkoutLogByWorkoutDate(Authentication authentication,
                                                      @RequestParam String workoutDate){
-        return workoutLogService.findWorkoutLogByWorkoutDate(authentication.getName(), workoutDate).toDTO();
+        Member member = memberService.findMember(authentication.getName());
+        return workoutLogService.findWorkoutLogByWorkoutDate(authentication.getName(), workoutDate).toDTO(member.getCanEatCalorie());
     }
 
     @Operation(summary = "특정 날짜의 운동 내용 업데이트", description = "특정 날짜의 운동을 업데이트합니다.")

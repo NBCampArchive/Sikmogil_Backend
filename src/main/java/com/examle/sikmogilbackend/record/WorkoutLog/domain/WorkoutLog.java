@@ -45,6 +45,15 @@ public class WorkoutLog {
                 .build();
     }
 
+    public WorkoutLogDTO toDTO(Long canEatCalorie){
+        return WorkoutLogDTO.builder()
+                .canEatCalorie(canEatCalorie)
+                .workoutDate(workoutDate)
+                .steps(steps)
+                .totalCaloriesBurned(totalCaloriesBurned)
+                .build();
+    }
+
     public void updateWorkoutLog(WorkoutLogDTO workoutLogDTO){
         this.workoutDate = workoutLogDTO.workoutDate();
         this.steps = workoutLogDTO.steps();

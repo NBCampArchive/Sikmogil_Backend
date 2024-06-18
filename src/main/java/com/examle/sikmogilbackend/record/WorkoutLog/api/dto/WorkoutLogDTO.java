@@ -5,6 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record WorkoutLogDTO(
+        Long canEatCalorie,
         String workoutDate,
         Long steps,
         Long totalCaloriesBurned
