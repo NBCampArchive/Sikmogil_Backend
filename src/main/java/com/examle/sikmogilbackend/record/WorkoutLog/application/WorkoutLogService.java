@@ -25,14 +25,12 @@ public class WorkoutLogService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public List<WorkoutLogDTO> findByMemberIdWorkoutLog (String email) {
+    public List<WorkoutLog> findByMemberIdWorkoutLog (String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<WorkoutLog> workoutLogs =
                 workoutLogRepository.findByMember(member);
 
-        return workoutLogs.stream()
-                .map(WorkoutLog::toDTO)
-                .collect(Collectors.toList());
+        return workoutLogs;
     }
 
     @Transactional

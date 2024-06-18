@@ -1,11 +1,14 @@
 package com.examle.sikmogilbackend.record.WorkoutLog.api;
 
 import com.examle.sikmogilbackend.global.template.RspTemplate;
+import com.examle.sikmogilbackend.member.application.MemberService;
+import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutListService;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutLogService;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
+import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutLog;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,11 +16,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.mapper.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -26,6 +31,7 @@ import java.util.List;
 public class WorkoutLogController {
     private final WorkoutLogService workoutLogService;
     private final WorkoutListService workoutListService;
+    private final MemberService memberService;
 
     @Operation(summary = "사용자의 모든 운동 내역 출력", description = "사용자의 모든 운동 내용을 출력합니다.")
     @ApiResponses(value = {
@@ -34,7 +40,11 @@ public class WorkoutLogController {
     })
     @GetMapping("")
     public List<WorkoutLogDTO> findByMemberIdWorkoutLog(Authentication authentication){
-        return workoutLogService.findByMemberIdWorkoutLog(authentication.getName());
+        return workoutLogService.findByMemberIdWorkoutLog(
+                authentication.getName()).stream()
+                .map(WorkoutLog::toDTO)
+                .collect(Collectors.toList()
+                );
     }
 
     @Operation(summary = "운동의 특정 날짜 데이터 출력", description = "특정 날짜의 내용을 출력합니다.")
@@ -45,7 +55,8 @@ public class WorkoutLogController {
     @GetMapping("/getWorkoutLogDate")
     public WorkoutLogDTO findWorkoutLogByWorkoutDate(Authentication authentication,
                                                      @RequestParam String workoutDate){
-        return workoutLogService.findWorkoutLogByWorkoutDate(authentication.getName(), workoutDate).toDTO();
+        Member member = memberService.findMember(authentication.getName());
+        return workoutLogService.findWorkoutLogByWorkoutDate(authentication.getName(), workoutDate).toDTO(member.getCanEatCalorie());
     }
 
     @Operation(summary = "특정 날짜의 운동 내용 업데이트", description = "특정 날짜의 운동을 업데이트합니다.")
@@ -99,5 +110,17 @@ public class WorkoutLogController {
                                                  @RequestParam Long workoutListId){
         workoutListService.deleteWorkoutList(authentication.getName(),date,workoutListId);
         return new RspTemplate<>(HttpStatus.OK, "운동 리스트 사진 성공");
+    }
+
+    @Operation(summary = "운동 사진 출력", description = "운동 사진을 모두 출력합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "운동 사진 출력 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
+    })
+    @GetMapping("/findWorkoutPictures")
+    public List<WorkoutListDTO> findWorkoutPictures(Authentication authentication){
+        return workoutListService.findWorkoutPictures(authentication.getName()).stream()
+                .map(WorkoutList::toDTO)
+                .collect(Collectors.toList());
     }
 }

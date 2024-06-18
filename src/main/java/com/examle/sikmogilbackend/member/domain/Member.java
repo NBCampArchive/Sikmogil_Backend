@@ -1,14 +1,9 @@
 package com.examle.sikmogilbackend.member.domain;
 
 import com.examle.sikmogilbackend.member.api.dto.reqeust.OnboardingInfoUpdateReqDto;
+import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -75,6 +72,9 @@ public class Member {
     @Schema(description = "권한", example = "ROLE_USER")
     private Role role;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Calendar> calendars = new ArrayList<>();
+
     @Builder
     private Member(boolean firstLogin, String email, String name, String picture, SocialType socialType, Role role) {
         this.firstLogin = firstLogin;
@@ -99,6 +99,7 @@ public class Member {
 
     public OnboardingInfoUpdateReqDto toDTO(){
         return OnboardingInfoUpdateReqDto.builder()
+                .picture(picture)
                 .nickname(nickname)
                 .height(height)
                 .weight(weight)
