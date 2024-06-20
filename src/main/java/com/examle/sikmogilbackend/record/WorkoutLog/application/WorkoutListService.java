@@ -55,6 +55,7 @@ public class WorkoutListService {
         Member member = memberService.findMember(email);
         return member.getCalendars().stream()
                 .flatMap(calendar -> calendar.getWorkoutLists().stream())
+                .filter(workoutList -> workoutList.getWorkoutPicture() != null)
                 .collect(Collectors.toList());
     }
 
