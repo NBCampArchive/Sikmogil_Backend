@@ -25,6 +25,9 @@ public class DietListService {
 
     @Transactional
     public List<DietListDTO> findDietListByDate (String email, String date) {
+        log.info("findDietListByDate 사진 찾기 중");
+        log.info("email = "+email);
+        log.info("date = "+date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
 
         List<DietList> dietLists =
@@ -37,6 +40,9 @@ public class DietListService {
 
     @Transactional
     public void addDietList(String email, String date, DietListDTO dietListDTO){
+        log.info("addDietList 사진 찾기 중");
+        log.info("email = "+email);
+        log.info("date = "+date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         DietList dietList = DietList.builder()
                         .mealTime(dietListDTO.mealTime())
@@ -49,6 +55,10 @@ public class DietListService {
 
     @Transactional
     public void deleteDietList(String email, String date, Long dietListId) {
+        log.info("deleteDietList 사진 찾기 중");
+        log.info("email = "+email);
+        log.info("date = "+date);
+
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         DietList dietList = dietListRepository.findDietListByDietListId(dietListId).orElseThrow(DietListNotFoundException::new);
         checkEqualsDiet(dietLog, dietList);

@@ -32,6 +32,8 @@ public class CalendarService {
 
     @Transactional
     public List<CalendarDTO> findByMemberIdCalendar (String email) {
+        log.info("findByMemberIdCalendar 사진 찾기 중");
+        log.info("email = "+email);
 
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<Calendar> calendars =
@@ -44,6 +46,9 @@ public class CalendarService {
 
     @Transactional
     public MainCalendarDTO searchWeekWeightAndTargetWeight (String email) {
+        log.info("searchWeekWeightAndTargetWeight 사진 찾기 중");
+        log.info("email = "+email);
+
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<Calendar> calendars =
                 calendarRepository.findCalendarByDiaryWeightIsNotNullAndMember(member);
@@ -69,6 +74,9 @@ public class CalendarService {
 
     @Transactional
     public Calendar findCalendarByDiaryDate (String email, String diaryDate) {
+        log.info("findCalendarByDiaryDate 사진 찾기 중");
+        log.info("email = "+email);
+        log.info("diaryDate = "+diaryDate);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         Calendar calendar = checkExistenceCalendar(member, diaryDate);
@@ -78,6 +86,10 @@ public class CalendarService {
 
     @Transactional
     public void UpdateCalendar (String email, CalendarDTO calendarDTO) {
+        log.info("UpdateCalendar 사진 찾기 중");
+        log.info("email = "+email);
+        log.info("calendarDTO = "+calendarDTO.toString());
+
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         Calendar calendar = checkExistenceCalendar(member, calendarDTO.diaryDate());
@@ -87,6 +99,11 @@ public class CalendarService {
 
     @Transactional
     public void updateWeight (String email, String date, Long weight) {
+        log.info("updateWeight 사진 찾기 중");
+        log.info("email = "+email);
+        log.info("date = "+date);
+        log.info("weight = "+weight);
+
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         Calendar calendar = checkExistenceCalendar(member, date);
@@ -96,6 +113,10 @@ public class CalendarService {
 
     @Transactional
     public void createCalendar (Member member, String diaryDate) {
+        log.info("createCalendar 사진 찾기 중");
+        log.info("member = "+member);
+        log.info("diaryDate = "+diaryDate);
+
         log.info("캘린더 생성@@@@@@@@@@@@@");
         calendarRepository.save(
                 Calendar.builder()
@@ -106,11 +127,16 @@ public class CalendarService {
 
     @Transactional
     private Calendar checkExistenceCalendar(Member member, String diaryDate) {
+        log.info("checkExistenceCalendar 사진 찾기 중");
+        log.info("member = "+member);
+        log.info("diaryDate = "+diaryDate);
+
         try {
             if (!calendarRepository.existsCalendarByMemberAndDiaryDate(member, diaryDate))
                 throw new CalendarNotFoundException();
         } catch (CalendarNotFoundException e) {
             log.error("Error = "+e.getMessage());
+            log.error("diaryDate"+diaryDate);
             createCalendar(member, diaryDate);
         }
         return calendarRepository.findByMemberAndAndDiaryDate(member, diaryDate);
