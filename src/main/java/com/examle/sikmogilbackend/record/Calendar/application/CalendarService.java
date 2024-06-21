@@ -104,6 +104,7 @@ public class CalendarService {
                         .build());
     }
 
+    @Transactional
     private Calendar checkExistenceCalendar(Member member, String diaryDate) {
         try {
             if (!calendarRepository.existsCalendarByMemberAndDiaryDate(member, diaryDate))

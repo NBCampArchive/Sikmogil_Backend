@@ -55,6 +55,7 @@ public class DietListService {
         dietListRepository.delete(dietList);
     }
 
+    @Transactional
     private void checkEqualsDiet(DietLog dietLog, DietList dietList) {
         log.info("삭제 중");
         if (!(dietLog.getDietLogId() == dietList.getDietLog().getDietLogId())) {

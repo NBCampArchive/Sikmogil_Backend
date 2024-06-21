@@ -84,6 +84,7 @@ public class WorkoutListService {
         workoutListRepository.delete(workoutList);
     }
 
+    @Transactional
     private void checkEqualsWorkout(WorkoutLog workoutLog, WorkoutList workoutList) {
         log.info("삭제 중");
         if (!(workoutLog.getWorkoutLogId() == workoutList.getWorkoutLog().getWorkoutLogId())) {
