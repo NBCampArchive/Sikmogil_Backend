@@ -87,6 +87,7 @@ public class Member {
 
     public void onboardingUpdate(OnboardingInfoUpdateReqDto onboardingInfoUpdateReqDto) {
         this.nickname = onboardingInfoUpdateReqDto.nickname();
+        this.picture = onboardingInfoUpdateReqDto.picture();
         this.height = onboardingInfoUpdateReqDto.height();
         this.weight = onboardingInfoUpdateReqDto.weight();
         this.gender = onboardingInfoUpdateReqDto.gender();

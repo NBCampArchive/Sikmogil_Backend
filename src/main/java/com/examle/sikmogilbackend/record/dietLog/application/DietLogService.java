@@ -26,6 +26,8 @@ public class DietLogService {
 
     @Transactional
     public List<DietLogDTO> findByMemberIdDietLog (String email) {
+        log.info("findByMemberIdDietLog ");
+        log.info("email = "+email);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<DietLog> dietLogs =
                 dietLogRepository.findByMember(member);
@@ -37,6 +39,9 @@ public class DietLogService {
 
     @Transactional
     public DietLog findDietLogByDietDate (String email, String dietDate) {
+        log.info("findDietLogByDietDate ");
+        log.info("email = "+email);
+        log.info("dietDate = "+dietDate);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         DietLog dietLog = checkExistenceDietLog(member, dietDate);
@@ -46,6 +51,9 @@ public class DietLogService {
 
     @Transactional
     public void updateDietLog (String email, DietLogDTO dietLogDTO) {
+        log.info("updateDietLog ");
+        log.info("email = "+email);
+        log.info("dietLogDTO = "+dietLogDTO.toString());
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         DietLog dietLog = checkExistenceDietLog(member, dietLogDTO.dietDate());
@@ -55,7 +63,13 @@ public class DietLogService {
 
     @Transactional
     public void createDietLog (Member member, String dietDate) {
+        log.info("createDietLog ");
+        log.info("member = "+member);
+        log.info("dietDate = "+dietDate);
         log.info("캘린더 생성@@@@@@@@@@@@@");
+
+        if (dietLogRepository.existsDietLogByMemberAndDietDate(member, dietDate))
+            return;
         dietLogRepository.save(
                 DietLog.builder()
                         .member(member)
@@ -63,12 +77,17 @@ public class DietLogService {
                         .build());
     }
 
+    @Transactional
     private DietLog checkExistenceDietLog(Member member, String dietDate) {
+        log.info("checkExistenceDietLog ");
+        log.info("member = "+member);
+        log.info("dietDate = "+dietDate);
         try {
             if (!dietLogRepository.existsDietLogByMemberAndDietDate(member, dietDate))
                 throw new DietLogNotFoundException();
         } catch (DietLogNotFoundException e) {
             log.error("Error = "+e.getMessage());
+            log.error("dietDate"+dietDate);
             createDietLog(member, dietDate);
         }
         return dietLogRepository.findByMemberAndAndDietDate(member, dietDate);

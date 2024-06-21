@@ -26,6 +26,8 @@ public class WorkoutLogService {
 
     @Transactional
     public List<WorkoutLog> findByMemberIdWorkoutLog (String email) {
+        log.info("findByMemberIdWorkoutLog ");
+        log.info("email = "+email);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<WorkoutLog> workoutLogs =
                 workoutLogRepository.findByMember(member);
@@ -35,6 +37,10 @@ public class WorkoutLogService {
 
     @Transactional
     public WorkoutLog findWorkoutLogByWorkoutDate (String email, String workoutDate) {
+        log.info("findWorkoutLogByWorkoutDate ");
+        log.info("email = "+email);
+        log.info("workoutDate = "+workoutDate);
+
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         WorkoutLog workoutLog = checkExistenceWorkoutLog(member, workoutDate);
@@ -44,6 +50,10 @@ public class WorkoutLogService {
 
     @Transactional
     public void updateWorkoutLog (String email, WorkoutLogDTO workoutLogDTO) {
+        log.info("updateWorkoutLog ");
+        log.info("email = "+email);
+        log.info("workoutLogDTO = "+workoutLogDTO.toString());
+
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         WorkoutLog workoutLog = checkExistenceWorkoutLog(member, workoutLogDTO.workoutDate());
@@ -53,6 +63,11 @@ public class WorkoutLogService {
 
     @Transactional
     public void createWorkoutLog (Member member, String workoutDate) {
+        log.info("createWorkoutLog ");
+        log.info("member = "+member);
+        log.info("workoutDate = "+workoutDate);
+        if (workoutLogRepository.existsCalendarByMemberAndWorkoutDate(member, workoutDate))
+            return;
         log.info("캘린더 생성@@@@@@@@@@@@@");
         workoutLogRepository.save(
                 WorkoutLog.builder()
@@ -61,12 +76,14 @@ public class WorkoutLogService {
                         .build());
     }
 
+    @Transactional
     private WorkoutLog checkExistenceWorkoutLog(Member member, String workoutDate) {
         try {
             if (!workoutLogRepository.existsCalendarByMemberAndWorkoutDate(member, workoutDate))
                 throw new WorkoutLogNotFoundException();
         } catch (WorkoutLogNotFoundException e) {
             log.error("Error = "+e.getMessage());
+            log.error("workoutDate"+workoutDate);
             createWorkoutLog(member, workoutDate);
         }
         return workoutLogRepository.findByMemberAndAndWorkoutDate(member, workoutDate);

@@ -33,6 +33,9 @@ public class WorkoutListService {
 
     @Transactional
     public List<WorkoutListDTO> findWorkoutListByDate (String email, String date) {
+        log.info("findWorkoutListByDate ");
+        log.info("email = "+email);
+        log.info("date = "+date);
         Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
         WorkoutLog workoutLog = workoutLogService.findWorkoutLogByWorkoutDate(email, date);
 
@@ -44,6 +47,8 @@ public class WorkoutListService {
     }
     @Transactional
     public List<WorkoutListDTO> findWorkoutListByDate (Calendar calendar) {
+        log.info("findWorkoutListByDate ");
+        log.info("calendar = "+calendar);
         List<WorkoutList> workoutLists = workoutListRepository.findWorkoutListsByCalendar(calendar);
         return workoutLists.stream()
                 .map(WorkoutList::toDTO)
@@ -52,14 +57,20 @@ public class WorkoutListService {
 
     @Transactional
     public List<WorkoutList> findWorkoutPictures(String email) {
+        log.info("findWorkoutPictures ");
+        log.info("email = "+email);
         Member member = memberService.findMember(email);
         return member.getCalendars().stream()
                 .flatMap(calendar -> calendar.getWorkoutLists().stream())
+                .filter(workoutList -> workoutList.getWorkoutPicture() != null)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public void addWorkoutList(String email, String date, WorkoutListDTO workoutListDTO){
+        log.info("사진 추가 중");
+        log.info("email = "+email);
+        log.info("date = "+date);
         Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
         WorkoutLog workoutLog = workoutLogService.findWorkoutLogByWorkoutDate(email, date);
         WorkoutList workoutList = WorkoutList.builder()
@@ -76,6 +87,9 @@ public class WorkoutListService {
 
     @Transactional
     public void deleteWorkoutList(String email, String date, Long workoutListId) {
+        log.info("사진 삭제 중");
+        log.info("email = "+email);
+        log.info("date = "+date);
         WorkoutLog workoutLog = workoutLogService.findWorkoutLogByWorkoutDate(email, date);
         WorkoutList workoutList = workoutListRepository.findWorkoutListByWorkoutListId(workoutListId)
                 .orElseThrow(WorkoutListNotFoundException::new);
@@ -83,6 +97,7 @@ public class WorkoutListService {
         workoutListRepository.delete(workoutList);
     }
 
+    @Transactional
     private void checkEqualsWorkout(WorkoutLog workoutLog, WorkoutList workoutList) {
         log.info("삭제 중");
         if (!(workoutLog.getWorkoutLogId() == workoutList.getWorkoutLog().getWorkoutLogId())) {
