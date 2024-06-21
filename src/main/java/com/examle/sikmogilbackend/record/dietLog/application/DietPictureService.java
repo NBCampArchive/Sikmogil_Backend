@@ -37,7 +37,7 @@ public class DietPictureService {
 
     @Transactional
     public List<DietPictureDTO> findDietPictureByDate (String email, String date) {
-        log.info("findDietPictureByDate 사진 찾기 중");
+        log.info("findDietPictureByDate ");
         Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         log.info("email = "+email);
@@ -51,7 +51,7 @@ public class DietPictureService {
     }
     @Transactional
     public List<DietPictureDTO> findDietPictureByDate (Calendar calendar) {
-        log.info("findDietPictureByDate 사진 찾기 중");
+        log.info("findDietPictureByDate ");
         log.info("calendar = "+calendar);
         List<DietPicture> dietPictures = dietPictureRepository.findByCalendar(calendar);
         return dietPictures.stream()
@@ -61,7 +61,7 @@ public class DietPictureService {
 
     @Transactional
     public List<DietPicture> findDietPictures(String email) {
-        log.info("사진 찾기 중");
+        log.info("");
         log.info("email = "+email);
         Member member = memberService.findMember(email);
         return member.getCalendars().stream()

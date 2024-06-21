@@ -25,7 +25,7 @@ public class DietListService {
 
     @Transactional
     public List<DietListDTO> findDietListByDate (String email, String date) {
-        log.info("findDietListByDate 사진 찾기 중");
+        log.info("findDietListByDate ");
         log.info("email = "+email);
         log.info("date = "+date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
@@ -40,7 +40,7 @@ public class DietListService {
 
     @Transactional
     public void addDietList(String email, String date, DietListDTO dietListDTO){
-        log.info("addDietList 사진 찾기 중");
+        log.info("addDietList ");
         log.info("email = "+email);
         log.info("date = "+date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
@@ -55,7 +55,7 @@ public class DietListService {
 
     @Transactional
     public void deleteDietList(String email, String date, Long dietListId) {
-        log.info("deleteDietList 사진 찾기 중");
+        log.info("deleteDietList ");
         log.info("email = "+email);
         log.info("date = "+date);
 

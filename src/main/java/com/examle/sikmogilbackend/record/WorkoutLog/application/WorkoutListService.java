@@ -33,7 +33,7 @@ public class WorkoutListService {
 
     @Transactional
     public List<WorkoutListDTO> findWorkoutListByDate (String email, String date) {
-        log.info("findWorkoutListByDate 사진 찾기 중");
+        log.info("findWorkoutListByDate ");
         log.info("email = "+email);
         log.info("date = "+date);
         Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
@@ -47,7 +47,7 @@ public class WorkoutListService {
     }
     @Transactional
     public List<WorkoutListDTO> findWorkoutListByDate (Calendar calendar) {
-        log.info("findWorkoutListByDate 사진 찾기 중");
+        log.info("findWorkoutListByDate ");
         log.info("calendar = "+calendar);
         List<WorkoutList> workoutLists = workoutListRepository.findWorkoutListsByCalendar(calendar);
         return workoutLists.stream()
@@ -57,7 +57,7 @@ public class WorkoutListService {
 
     @Transactional
     public List<WorkoutList> findWorkoutPictures(String email) {
-        log.info("findWorkoutPictures 사진 찾기 중");
+        log.info("findWorkoutPictures ");
         log.info("email = "+email);
         Member member = memberService.findMember(email);
         return member.getCalendars().stream()
