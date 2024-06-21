@@ -68,6 +68,7 @@ public class WorkoutLogService {
                 throw new WorkoutLogNotFoundException();
         } catch (WorkoutLogNotFoundException e) {
             log.error("Error = "+e.getMessage());
+            log.error("workoutDate"+workoutDate);
             createWorkoutLog(member, workoutDate);
         }
         return workoutLogRepository.findByMemberAndAndWorkoutDate(member, workoutDate);

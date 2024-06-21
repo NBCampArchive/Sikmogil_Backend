@@ -26,6 +26,8 @@ public class DietLogService {
 
     @Transactional
     public List<DietLogDTO> findByMemberIdDietLog (String email) {
+        log.info("findByMemberIdDietLog 사진 찾기 중");
+        log.info("email = "+email);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<DietLog> dietLogs =
                 dietLogRepository.findByMember(member);
@@ -37,6 +39,9 @@ public class DietLogService {
 
     @Transactional
     public DietLog findDietLogByDietDate (String email, String dietDate) {
+        log.info("findDietLogByDietDate 사진 찾기 중");
+        log.info("email = "+email);
+        log.info("dietDate = "+dietDate);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         DietLog dietLog = checkExistenceDietLog(member, dietDate);
@@ -46,6 +51,9 @@ public class DietLogService {
 
     @Transactional
     public void updateDietLog (String email, DietLogDTO dietLogDTO) {
+        log.info("updateDietLog 사진 찾기 중");
+        log.info("email = "+email);
+        log.info("dietLogDTO = "+dietLogDTO.toString());
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         DietLog dietLog = checkExistenceDietLog(member, dietLogDTO.dietDate());
@@ -55,6 +63,9 @@ public class DietLogService {
 
     @Transactional
     public void createDietLog (Member member, String dietDate) {
+        log.info("createDietLog 사진 찾기 중");
+        log.info("member = "+member);
+        log.info("dietDate = "+dietDate);
         log.info("캘린더 생성@@@@@@@@@@@@@");
         dietLogRepository.save(
                 DietLog.builder()
@@ -65,11 +76,15 @@ public class DietLogService {
 
     @Transactional
     private DietLog checkExistenceDietLog(Member member, String dietDate) {
+        log.info("checkExistenceDietLog 사진 찾기 중");
+        log.info("member = "+member);
+        log.info("dietDate = "+dietDate);
         try {
             if (!dietLogRepository.existsDietLogByMemberAndDietDate(member, dietDate))
                 throw new DietLogNotFoundException();
         } catch (DietLogNotFoundException e) {
             log.error("Error = "+e.getMessage());
+            log.error("dietDate"+dietDate);
             createDietLog(member, dietDate);
         }
         return dietLogRepository.findByMemberAndAndDietDate(member, dietDate);

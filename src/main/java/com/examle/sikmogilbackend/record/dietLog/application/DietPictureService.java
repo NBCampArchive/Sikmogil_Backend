@@ -37,8 +37,11 @@ public class DietPictureService {
 
     @Transactional
     public List<DietPictureDTO> findDietPictureByDate (String email, String date) {
+        log.info("findDietPictureByDate 사진 찾기 중");
         Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
+        log.info("email = "+email);
+        log.info("date = "+date);
 
         List<DietPicture> dietPictures = dietPictureRepository.findDietPictureByCalendarAndDietLog(calendar, dietLog);
 
@@ -48,6 +51,8 @@ public class DietPictureService {
     }
     @Transactional
     public List<DietPictureDTO> findDietPictureByDate (Calendar calendar) {
+        log.info("findDietPictureByDate 사진 찾기 중");
+        log.info("calendar = "+calendar);
         List<DietPicture> dietPictures = dietPictureRepository.findByCalendar(calendar);
         return dietPictures.stream()
                 .map(DietPicture::toDTO)
@@ -56,6 +61,8 @@ public class DietPictureService {
 
     @Transactional
     public List<DietPicture> findDietPictures(String email) {
+        log.info("사진 찾기 중");
+        log.info("email = "+email);
         Member member = memberService.findMember(email);
         return member.getCalendars().stream()
                 .flatMap(calendar -> calendar.getDietPictures().stream())
@@ -64,6 +71,9 @@ public class DietPictureService {
 
     @Transactional
     public void addDietPicture(String email, String date, DietPictureDTO dietPictureDTO){
+        log.info("사진 추가 중");
+        log.info("email = "+email);
+        log.info("date = "+date);
         Calendar calendar = calendarService.findCalendarByDiaryDate(email, date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         DietPicture dietPicture = DietPicture.builder()
@@ -77,6 +87,9 @@ public class DietPictureService {
 
     @Transactional
     public void deleteDietPicture(String email, String date, Long dietPictureId) {
+        log.info("사진 삭제 중");
+        log.info("email = "+email);
+        log.info("date = "+date);
         DietLog dietLog = dietLogService.findDietLogByDietDate(email, date);
         DietPicture dietPicture = dietPictureRepository.findDietPictureByDietPictureId(dietPictureId)
                 .orElseThrow(DietPictureNotFoundException::new);
