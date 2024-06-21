@@ -3,6 +3,7 @@ package com.examle.sikmogilbackend.member.api;
 import com.examle.sikmogilbackend.global.template.RspTemplate;
 import com.examle.sikmogilbackend.member.api.dto.reqeust.OnboardingInfoUpdateReqDto;
 import com.examle.sikmogilbackend.member.application.MemberService;
+import com.examle.sikmogilbackend.member.exception.ExistsNickNameException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,6 +48,22 @@ public class MemberController {
                                                     @RequestBody OnboardingInfoUpdateReqDto onboardingInfoUpdateReqDto) {
         memberService.onboardingInfoUpdate(email, onboardingInfoUpdateReqDto);
         return new RspTemplate<>(HttpStatus.OK, "온보딩");
+    }
+
+    @Operation(summary = "닉네임 중복 확인", description = "닉네임이 중복인지 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용 가능 닉네임"),
+            @ApiResponse(responseCode = "400", description = "중복 닉네임 입니다."),
+            @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @GetMapping("/nickname")
+    public RspTemplate<Boolean> duplicateNickName(@RequestParam(name = "nickname") String nickName) {
+        try {
+            memberService.validateDuplicateNickName(nickName);
+            return new RspTemplate<>(HttpStatus.OK, "사용 가능한 닉네임입니다.", true);
+        } catch (ExistsNickNameException e) {
+            return new RspTemplate<>(HttpStatus.BAD_REQUEST, e.getMessage(), false);
+        }
     }
 
     @Operation(summary = "온보딩 정보 출력", description = "온보딩 정보를 출력합니다.")
