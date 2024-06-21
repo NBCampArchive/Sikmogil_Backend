@@ -61,6 +61,7 @@ public class WorkoutLogService {
                         .build());
     }
 
+    @Transactional
     private WorkoutLog checkExistenceWorkoutLog(Member member, String workoutDate) {
         try {
             if (!workoutLogRepository.existsCalendarByMemberAndWorkoutDate(member, workoutDate))

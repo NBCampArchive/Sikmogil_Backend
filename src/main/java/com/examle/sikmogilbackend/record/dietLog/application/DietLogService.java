@@ -63,6 +63,7 @@ public class DietLogService {
                         .build());
     }
 
+    @Transactional
     private DietLog checkExistenceDietLog(Member member, String dietDate) {
         try {
             if (!dietLogRepository.existsDietLogByMemberAndDietDate(member, dietDate))

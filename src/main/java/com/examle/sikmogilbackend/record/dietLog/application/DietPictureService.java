@@ -84,6 +84,7 @@ public class DietPictureService {
         dietPictureRepository.delete(dietPicture);
     }
 
+    @Transactional
     private void checkEqualsDiet(DietLog dietLog, DietPicture dietPicture) {
         log.info("삭제 중");
         if (!(dietLog.getDietLogId() == dietPicture.getDietLog().getDietLogId())) {
