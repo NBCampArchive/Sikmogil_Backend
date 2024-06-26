@@ -5,6 +5,7 @@ import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.record.Calendar.application.CalendarService;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.FindWorkoutPictureDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
@@ -12,8 +13,12 @@ import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutLog;
 import com.examle.sikmogilbackend.record.WorkoutLog.domain.repository.WorkoutListRepository;
 import com.examle.sikmogilbackend.record.WorkoutLog.exception.WorkoutListNotEqualsException;
 import com.examle.sikmogilbackend.record.WorkoutLog.exception.WorkoutListNotFoundException;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.FindDietPictureDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,14 +61,22 @@ public class WorkoutListService {
     }
 
     @Transactional
-    public List<WorkoutList> findWorkoutPictures(String email) {
+    public FindWorkoutPictureDTO findWorkoutPictures(String email, Integer page) {
         log.info("findWorkoutPictures ");
         log.info("email = "+email);
         Member member = memberService.findMember(email);
-        return member.getCalendars().stream()
+        Integer total = member.getCalendars().stream()
                 .flatMap(calendar -> calendar.getWorkoutLists().stream())
                 .filter(workoutList -> workoutList.getWorkoutPicture() != null)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).size();
+        PageRequest pageable = PageRequest.of(page, 10);
+        List<WorkoutListDTO> workoutListDTOS= workoutListRepository.findWorkoutListByByEmailAndWorkoutPictureNotNull(email, pageable).stream()
+                                                    .map(WorkoutList::toDTO)
+                                                    .collect(Collectors.toList());
+        return FindWorkoutPictureDTO.builder()
+                .lastPage(total/10)
+                .pictures(workoutListDTOS)
+                .build();
     }
 
     @Transactional
