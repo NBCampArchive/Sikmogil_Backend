@@ -8,6 +8,7 @@ import com.examle.sikmogilbackend.community.board.domain.BoardPicture;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardPictureRepository;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardRepository;
 import com.examle.sikmogilbackend.community.board.exception.BoardNotFoundException;
+import com.examle.sikmogilbackend.community.board.exception.NotBoardOwnerException;
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
@@ -63,12 +64,22 @@ public class BoardService {
     // 게시글 상세 조회
     public BoardInfoResDto boardDetail(String email, Long boardId) {
         Member member = getMemberByEmail(email);
-        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        Board board = getBoardById(boardId);
 
         return BoardInfoResDto.of(member, board);
     }
 
     // 게시글 삭제
+    @Transactional
+    public void boardDelete(String email, Long boardId) {
+        Member member = getMemberByEmail(email);
+        Board board = getBoardById(boardId);
+
+        checkBoardOwnership(member, board);
+
+        boardPictureRepository.deleteByBoardBoardId(boardId);
+        boardRepository.delete(board);
+    }
 
     // 게시글 수정
 
@@ -79,4 +90,15 @@ public class BoardService {
     private Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
     }
+
+    private Board getBoardById(Long boardId) {
+        return boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+    }
+
+    private void checkBoardOwnership(Member member, Board board) {
+        if (!member.getMemberId().equals(board.getWriter().getMemberId())) {
+            throw new NotBoardOwnerException();
+        }
+    }
+
 }

@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,7 +75,17 @@ public class BoardController {
         return new RspTemplate<>(HttpStatus.OK, "게시글 상세 조회", boardService.boardDetail(email, boardId));
     }
 
-    // 게시글 삭제
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "삭제 성공"),
+            @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
+    })
+    @DeleteMapping("/{boardId}")
+    public RspTemplate<Void> boardDelete(@AuthenticationPrincipal String email,
+                                         @PathVariable(name = "boardId") Long boardId) {
+        boardService.boardDelete(email, boardId);
+        return new RspTemplate<>(HttpStatus.OK, "게시글 삭제");
+    }
 
     // 게시글 수정
 
