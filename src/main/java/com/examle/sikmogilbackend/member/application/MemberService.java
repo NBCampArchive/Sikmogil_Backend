@@ -29,7 +29,6 @@ public class MemberService {
 
     @Transactional
     public void onboardingInfoUpdate(String email, OnboardingInfoUpdateReqDto onboardingInfoUpdateReqDto) {
-        validateDuplicateNickName(onboardingInfoUpdateReqDto.nickname());
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         member.firstLongUpdate();
@@ -37,7 +36,7 @@ public class MemberService {
     }
 
     // nickName 중복검사
-    private void validateDuplicateNickName(String nickName) {
+    public void validateDuplicateNickName(String nickName) {
         if (memberRepository.existsByNickname(nickName)) {
             throw new ExistsNickNameException();
         }
