@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +14,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -30,6 +34,7 @@ public class Board {
     @Schema(description = "게시글 id", example = "1")
     private Long boardId;
 
+    @Enumerated(value = EnumType.STRING)
     @Schema(description = "카테고리", example = "다이어트, 운동, 자유")
     private Category category;
 
@@ -37,7 +42,7 @@ public class Board {
     private String title;
 
     @Schema(description = "게시글 내용", example = "내용")
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Schema(description = "게시글 날짜", example = "2024.06.21")
@@ -56,11 +61,11 @@ public class Board {
     private List<BoardPicture> pictures = new ArrayList<>();
 
     @Builder
-    private Board(Category category, String title, String content, String boardDate, Member writer) {
+    private Board(Category category, String title, String content, Member writer) {
         this.category = category;
         this.title = title;
         this.content = content;
-        this.boardDate = boardDate;
+        this.boardDate = String.valueOf(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         this.reportCount = 0;
         this.writer = writer;
     }
