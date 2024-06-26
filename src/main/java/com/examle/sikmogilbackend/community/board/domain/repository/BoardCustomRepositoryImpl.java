@@ -4,8 +4,8 @@ import static com.examle.sikmogilbackend.community.board.domain.QBoard.board;
 
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardInfoResDto;
 import com.examle.sikmogilbackend.community.board.domain.Board;
-import com.examle.sikmogilbackend.community.board.domain.BoardPicture;
 import com.examle.sikmogilbackend.community.board.domain.Category;
+import com.examle.sikmogilbackend.member.domain.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<BoardInfoResDto> findByCategoryWithBoard(String category, Pageable pageable) {
+    public Page<BoardInfoResDto> findByCategoryWithBoard(Member member, String category, Pageable pageable) {
         long total = queryFactory
                 .selectFrom(board)
                 .where(board.category.eq(Category.valueOf(category)))
@@ -37,11 +37,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 .fetch();
 
         List<BoardInfoResDto> boardDtos = boards.stream()
-                .map(b -> BoardInfoResDto.of(b,
-                        b.getPictures().stream()
-                                .map(BoardPicture::getImageUrl)
-                                .toList())
-                )
+                .map(b -> BoardInfoResDto.of(member, b))
                 .toList();
 
         return new PageImpl<>(boardDtos, pageable, total);
@@ -49,7 +45,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<BoardInfoResDto> findByBoardAll(Pageable pageable) {
+    public Page<BoardInfoResDto> findByBoardAll(Member member, Pageable pageable) {
         long total = queryFactory
                 .selectFrom(board)
                 .fetchCount();
@@ -62,11 +58,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 .fetch();
 
         List<BoardInfoResDto> boardDtos = boards.stream()
-                .map(b -> BoardInfoResDto.of(b,
-                        b.getPictures().stream()
-                                .map(BoardPicture::getImageUrl)
-                                .toList())
-                )
+                .map(b -> BoardInfoResDto.of(member, b))
                 .toList();
 
         return new PageImpl<>(boardDtos, pageable, total);

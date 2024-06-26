@@ -7,6 +7,7 @@ import com.examle.sikmogilbackend.community.board.domain.Board;
 import com.examle.sikmogilbackend.community.board.domain.BoardPicture;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardPictureRepository;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardRepository;
+import com.examle.sikmogilbackend.community.board.exception.BoardNotFoundException;
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
@@ -26,7 +27,7 @@ public class BoardService {
 
     @Transactional
     public Long boardSave(String email, BoardSaveReqDto boardSaveReqDto) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = getMemberByEmail(email);
         Board board = boardSaveReqDto.toEntity(member);
 
         boardImageSave(board, boardSaveReqDto);
@@ -46,13 +47,13 @@ public class BoardService {
 
     // 게시글 조회 (전체, 다이어트, 운동, 자유)
     public BoardListResDto categoryByBoardAll(String email, String category, Pageable pageable) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = getMemberByEmail(email);
 
         Page<BoardInfoResDto> byBoards;
         if (category.equals("ALL")) {
-            byBoards = boardRepository.findByBoardAll(pageable);
+            byBoards = boardRepository.findByBoardAll(member, pageable);
         } else {
-            byBoards = boardRepository.findByCategoryWithBoard(category, pageable);
+            byBoards = boardRepository.findByCategoryWithBoard(member, category, pageable);
         }
 
         // 좋아요, 댓글 Count 추가하기
@@ -60,9 +61,22 @@ public class BoardService {
     }
 
     // 게시글 상세 조회
+    public BoardInfoResDto boardDetail(String email, Long boardId) {
+        Member member = getMemberByEmail(email);
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+
+        return BoardInfoResDto.of(member, board);
+    }
 
     // 게시글 삭제
 
     // 게시글 수정
 
+    // 게시글 좋아요
+
+    // 게시글 좋아요 취소
+
+    private Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    }
 }

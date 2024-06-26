@@ -1,10 +1,11 @@
 package com.examle.sikmogilbackend.community.board.api;
 
 import com.examle.sikmogilbackend.community.board.api.dto.request.BoardSaveReqDto;
+import com.examle.sikmogilbackend.community.board.api.dto.response.BoardInfoResDto;
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardListResDto;
 import com.examle.sikmogilbackend.community.board.application.BoardService;
-import com.examle.sikmogilbackend.community.board.util.PageableUtil;
 import com.examle.sikmogilbackend.global.template.RspTemplate;
+import com.examle.sikmogilbackend.global.util.PageableUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -32,7 +33,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    @Operation(summary = "게시글 등록", description = "게시글 등록 합니다")
+    @Operation(summary = "게시글 등록", description = "게시글 등록 합니다, Request의 Category는 (ALL, DIET, WORKOUT, FREE) 이와같이 작성해야함.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "등록 성공"),
             @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
@@ -62,9 +63,22 @@ public class BoardController {
         return new RspTemplate<>(HttpStatus.OK, "카테고리별 게시물 조회", boards);
     }
 
-    // 게시글 상세 조회
+    @Operation(summary = "게시글 상세 조회", description = "게시글을 상세 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
+    })
+    @GetMapping("/detail/{boardId}")
+    public RspTemplate<BoardInfoResDto> boardDetail(@AuthenticationPrincipal String email,
+                                                    @PathVariable(name = "boardId") Long boardId) {
+        return new RspTemplate<>(HttpStatus.OK, "게시글 상세 조회", boardService.boardDetail(email, boardId));
+    }
 
     // 게시글 삭제
 
     // 게시글 수정
+
+    // 게시글 좋아요
+
+    // 게시글 좋아요 취소
 }

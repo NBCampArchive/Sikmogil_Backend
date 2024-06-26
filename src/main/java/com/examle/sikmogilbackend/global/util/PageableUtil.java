@@ -1,4 +1,4 @@
-package com.examle.sikmogilbackend.community.board.util;
+package com.examle.sikmogilbackend.global.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
