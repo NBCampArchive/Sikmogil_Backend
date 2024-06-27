@@ -1,6 +1,7 @@
 package com.examle.sikmogilbackend.community.board.application;
 
 import com.examle.sikmogilbackend.community.board.api.dto.request.BoardSaveReqDto;
+import com.examle.sikmogilbackend.community.board.api.dto.request.BoardUpdateReqDto;
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardInfoResDto;
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardListResDto;
 import com.examle.sikmogilbackend.community.board.domain.Board;
@@ -13,11 +14,13 @@ import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -82,6 +85,24 @@ public class BoardService {
     }
 
     // 게시글 수정
+    @Transactional
+    public BoardInfoResDto boardUpdate(String email, Long boardId, BoardUpdateReqDto boardUpdateReqDto) {
+        Member member = getMemberByEmail(email);
+        Board board = getBoardById(boardId);
+
+        checkBoardOwnership(member, board);
+        board.boardUpdate(boardUpdateReqDto);
+
+        // 새로운 이미지 url만 받아서 추가한다.
+        for (String url : boardUpdateReqDto.newImageUrl()) {
+            boardPictureRepository.save(BoardPicture.builder()
+                    .board(board)
+                    .imageUrl(url)
+                    .build());
+        }
+
+        return BoardInfoResDto.of(member, board);
+    }
 
     // 게시글 좋아요
 
