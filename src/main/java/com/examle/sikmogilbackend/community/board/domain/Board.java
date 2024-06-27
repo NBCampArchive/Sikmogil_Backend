@@ -1,5 +1,6 @@
 package com.examle.sikmogilbackend.community.board.domain;
 
+import com.examle.sikmogilbackend.community.board.api.dto.request.BoardUpdateReqDto;
 import com.examle.sikmogilbackend.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -70,11 +71,10 @@ public class Board {
         this.writer = writer;
     }
 
-//    public void addPicture(String imageUrl) {
-//        pictures.add(BoardPicture.builder()
-//                .board(this)
-//                .imageUrl(imageUrl)
-//                .build());
-//    }
+    public void boardUpdate(BoardUpdateReqDto boardUpdateReqDto) {
+        this.title = boardUpdateReqDto.title();
+        this.category = boardUpdateReqDto.category();
+        this.content = boardUpdateReqDto.content();
+    }
 
 }
