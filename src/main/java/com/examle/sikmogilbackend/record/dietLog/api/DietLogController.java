@@ -10,6 +10,7 @@ import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietListDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.FindDietPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.application.DietListService;
 import com.examle.sikmogilbackend.record.dietLog.application.DietLogService;
 import com.examle.sikmogilbackend.record.dietLog.application.DietPictureService;
@@ -160,10 +161,9 @@ public class DietLogController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/findDietPictures")
-    public List<DietPictureDTO> findDietPictures(Authentication authentication){
-        return dietPictureService.findDietPictures(authentication.getName()).stream()
-                .map(DietPicture::toDTO)
-                .collect(Collectors.toList());
+    public FindDietPictureDTO findDietPictures(Authentication authentication,
+                                               @RequestParam Integer page){
+        return dietPictureService.findDietPictures(authentication.getName(), page);
     }
 
 }

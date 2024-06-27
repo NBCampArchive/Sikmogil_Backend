@@ -2,12 +2,14 @@ package com.examle.sikmogilbackend.record.dietLog.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogInPictureDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Builder
@@ -30,8 +32,11 @@ public class DietLog {
     @Schema(description = "먹은 날짜", example = "2024.06.02")
     protected String dietDate;
 
-    @OneToMany(mappedBy = "dietLog", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "dietLog", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DietList> dietLists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dietLog", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<DietPicture> dietPictures = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -51,6 +56,18 @@ public class DietLog {
                 .waterIntake(waterIntake)
                 .totalCalorieEaten(totalCalorieEaten)
                 .dietDate(dietDate)
+                .build();
+    }
+
+    public DietLogInPictureDTO toPictureDTO(){
+        return DietLogInPictureDTO.builder()
+                .waterIntake(waterIntake)
+                .totalCalorieEaten(totalCalorieEaten)
+                .dietPictureDTOS(
+                        dietPictures.stream()
+                                .map(DietPicture::toDTO)
+                                .collect(Collectors.toList())
+                )
                 .build();
     }
 

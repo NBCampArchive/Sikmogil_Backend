@@ -3,6 +3,7 @@ package com.examle.sikmogilbackend.record.WorkoutLog.api;
 import com.examle.sikmogilbackend.global.template.RspTemplate;
 import com.examle.sikmogilbackend.member.application.MemberService;
 import com.examle.sikmogilbackend.member.domain.Member;
+import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.FindWorkoutPictureDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutLogDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutListService;
@@ -118,9 +119,8 @@ public class WorkoutLogController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/findWorkoutPictures")
-    public List<WorkoutListDTO> findWorkoutPictures(Authentication authentication){
-        return workoutListService.findWorkoutPictures(authentication.getName()).stream()
-                .map(WorkoutList::toDTO)
-                .collect(Collectors.toList());
+    public FindWorkoutPictureDTO findWorkoutPictures(Authentication authentication,
+                                                     @RequestParam Integer page){
+        return workoutListService.findWorkoutPictures(authentication.getName(),page);
     }
 }

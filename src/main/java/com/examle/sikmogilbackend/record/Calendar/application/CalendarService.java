@@ -1,24 +1,28 @@
 package com.examle.sikmogilbackend.record.Calendar.application;
 
+import com.examle.sikmogilbackend.member.application.MemberService;
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
 import com.examle.sikmogilbackend.member.exception.ExistsNickNameException;
 import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
+import com.examle.sikmogilbackend.record.Calendar.api.dto.FindCalendarByDateDTO;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.MainCalendarDTO;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.WeekWeightDTO;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import com.examle.sikmogilbackend.record.Calendar.domain.repository.CalendarRepository;
 import com.examle.sikmogilbackend.record.Calendar.exception.CalendarNotFoundException;
-import com.examle.sikmogilbackend.record.Calendar.exception.ExistsCalendarException;
+import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogInPictureDTO;
+import com.examle.sikmogilbackend.record.dietLog.application.DietLogService;
+import com.examle.sikmogilbackend.record.dietLog.domain.DietLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,10 @@ import java.util.stream.Collectors;
 public class CalendarService {
     private final CalendarRepository calendarRepository;
     private final MemberRepository memberRepository;
+
+    private final DietLogService dietLogService;
+
+    private final MemberService memberService;
 
     @Transactional
     public List<CalendarDTO> findByMemberIdCalendar (String email) {
@@ -43,6 +51,8 @@ public class CalendarService {
                 .map(Calendar::toDTO)
                 .collect(Collectors.toList());
     }
+
+
 
     @Transactional
     public MainCalendarDTO searchWeekWeightAndTargetWeight (String email) {
@@ -70,6 +80,34 @@ public class CalendarService {
                 .weight(member.getWeight())
                 .weekWeights(weekWeights.size() < 7?weekWeights:weekWeights.subList(0,7))
                 .build();
+    }
+
+    @Transactional
+    public FindCalendarByDateDTO findCalendarByDateInDietLogAndWorkoutList(String email, String diaryDate){
+        Calendar calendar = findCalendarByDiaryDate(email, diaryDate);
+
+        List<DietLog> dietLogs = dietLogService.findByMemberIdDietLogInPicture(email);
+
+
+        List<DietLogInPictureDTO> dietLogInPictureDTOs =
+                dietLogs.stream()
+                        .map(DietLog::toPictureDTO)
+                        .collect(Collectors.toList());
+
+        Member member = memberService.findMember(email);
+        FindCalendarByDateDTO findCalendarByDateDTO = FindCalendarByDateDTO.builder()
+                .canEatCalorie(member.getCanEatCalorie())
+                .diaryDate(calendar.getDiaryDate())
+                .diaryWeight(calendar.getDiaryWeight())
+                .diaryText(calendar.getDiaryText())
+                .dietLogInPictureDTOS(dietLogInPictureDTOs)
+                .workoutLists(
+                        calendar.getWorkoutLists().stream()
+                                .map(WorkoutList::toDTO)
+                                .collect(Collectors.toList())
+                )
+                .build();
+        return findCalendarByDateDTO;
     }
 
     @Transactional
