@@ -19,6 +19,6 @@ public interface WorkoutListRepository extends JpaRepository<WorkoutList, Long> 
 
     Optional<WorkoutList> findWorkoutListByWorkoutListId(Long workoutListId);
 
-    @Query(value="SELECT wl FROM WorkoutList wl where wl.calendar.member.email = :email and wl.workoutPicture is not null order by wl.workoutListId DESC ")
+    @Query(value="SELECT wl FROM WorkoutList wl where wl.calendar.member.email = :email and wl.workoutPicture is not null and wl.workoutPicture not like '' order by wl.workoutListId DESC ")
     Page<WorkoutList> findWorkoutListByByEmailAndWorkoutPictureNotNull(@Param("email") String email,Pageable pageable);
 }
