@@ -25,11 +25,11 @@ public class DietPicture {
     @Schema(description = "먹은 날짜", example = "2024.06.02")
     protected String dietDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diet_log_id")
     private DietLog dietLog;
 

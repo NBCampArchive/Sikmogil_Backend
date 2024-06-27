@@ -1,14 +1,21 @@
 package com.examle.sikmogilbackend.record.Calendar.api;
 
 import com.examle.sikmogilbackend.global.template.RspTemplate;
+import com.examle.sikmogilbackend.member.application.MemberService;
+import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.CalendarDTO;
+import com.examle.sikmogilbackend.record.Calendar.api.dto.FindCalendarByDateDTO;
 import com.examle.sikmogilbackend.record.Calendar.api.dto.MainCalendarDTO;
 import com.examle.sikmogilbackend.record.Calendar.application.CalendarService;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
 import com.examle.sikmogilbackend.record.WorkoutLog.application.WorkoutListService;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
+import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogInPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
+import com.examle.sikmogilbackend.record.dietLog.application.DietLogService;
 import com.examle.sikmogilbackend.record.dietLog.application.DietPictureService;
+import com.examle.sikmogilbackend.record.dietLog.domain.DietLog;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,11 +23,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -28,8 +37,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CalendarController {
     private final CalendarService calendarService;
-    private final DietPictureService dietPictureService;
-    private final WorkoutListService workoutListService;
 
     @Operation(summary = "사용자의 캘린더 내역 출력", description = "사용자의 모든 날짜의 캘린더 내용을 출력합니다.")
     @ApiResponses(value = {
@@ -58,13 +65,10 @@ public class CalendarController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
     })
     @GetMapping("/getCalendarDate")
-    public CalendarDTO findCalendarByDiaryDate(Authentication authentication,
-                                               @RequestParam String diaryDate){
-        Calendar calendar = calendarService.findCalendarByDiaryDate(authentication.getName(), diaryDate);
-        List<DietPictureDTO> dietPictureDTOS = dietPictureService.findDietPictureByDate(calendar);
-        List<WorkoutListDTO> workoutListDTOS = workoutListService.findWorkoutListByDate(calendar);
-        CalendarDTO calendarDTO = calendar.toDTO(dietPictureDTOS, workoutListDTOS);
-        return calendarDTO;
+    public FindCalendarByDateDTO findCalendarByDiaryDate(Authentication authentication,
+                                                         @RequestParam String diaryDate){
+        log.info("getCalendarDate 끝");
+        return calendarService.findCalendarByDateInDietLogAndWorkoutList(authentication.getName(), diaryDate);
     }
 
     @Operation(summary = "특정 날짜의 캘린더 내용 업데이트", description = "특정 날짜의 캘린더 내용을 업데이트합니다.")

@@ -38,6 +38,17 @@ public class DietLogService {
     }
 
     @Transactional
+    public List<DietLog> findByMemberIdDietLogInPicture(String email) {
+        log.info("findByMemberIdDietLog ");
+        log.info("email = "+email);
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        List<DietLog> dietLogs =
+                dietLogRepository.findByMember(member);
+
+        return dietLogs;
+    }
+
+    @Transactional
     public DietLog findDietLogByDietDate (String email, String dietDate) {
         log.info("findDietLogByDietDate ");
         log.info("email = "+email);
