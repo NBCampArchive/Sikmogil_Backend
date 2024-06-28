@@ -6,6 +6,7 @@ import com.examle.sikmogilbackend.community.board.api.dto.response.BoardInfoResD
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardListResDto;
 import com.examle.sikmogilbackend.community.board.domain.Board;
 import com.examle.sikmogilbackend.community.board.domain.BoardPicture;
+import com.examle.sikmogilbackend.community.board.domain.repository.BoardLikeRepository;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardPictureRepository;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardRepository;
 import com.examle.sikmogilbackend.community.board.exception.NotBoardOwnerException;
@@ -26,6 +27,7 @@ public class BoardService {
     private final GlobalUtil globalUtil;
     private final BoardRepository boardRepository;
     private final BoardPictureRepository boardPictureRepository;
+    private final BoardLikeRepository boardLikeRepository;
 
     @Transactional
     public Long boardSave(String email, BoardSaveReqDto boardSaveReqDto) {
@@ -67,7 +69,9 @@ public class BoardService {
         Member member = globalUtil.getMemberByEmail(email);
         Board board = globalUtil.getBoardById(boardId);
 
-        return BoardInfoResDto.of(member, board);
+        boolean isLike = boardLikeRepository.existsByBoardAndMember(board, member);
+
+        return BoardInfoResDto.detailOf(member, board, isLike);
     }
 
     // 게시글 삭제
@@ -99,7 +103,9 @@ public class BoardService {
                     .build());
         }
 
-        return BoardInfoResDto.of(member, board);
+        boolean isLike = boardLikeRepository.existsByBoardAndMember(board, member);
+
+        return BoardInfoResDto.detailOf(member, board, isLike);
     }
 
     private void checkBoardOwnership(Member member, Board board) {

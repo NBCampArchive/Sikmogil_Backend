@@ -17,6 +17,7 @@ public record BoardInfoResDto(
         String content,
         List<String> imageUrl,
         int likeCount,
+        boolean isLike,
 //        int commentCount,
         String nickname,
         String date
@@ -35,6 +36,27 @@ public record BoardInfoResDto(
                 .content(board.getContent())
                 .imageUrl(imageUrl)
                 .likeCount(board.getLikeCount())
+//                .commentCount(commentCount)
+                .nickname(board.getWriter().getNickname())
+                .date(board.getBoardDate())
+                .build();
+    }
+
+    public static BoardInfoResDto detailOf(Member member, Board board, boolean isLike) {
+        List<String> imageUrl = board.getPictures().stream()
+                .map(BoardPicture::getImageUrl)
+                .toList();
+
+        return BoardInfoResDto.builder()
+                .myMemberId(member.getMemberId())
+                .writerMemberId(board.getWriter().getMemberId())
+                .boardId(board.getBoardId())
+                .category(board.getCategory())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .imageUrl(imageUrl)
+                .likeCount(board.getLikeCount())
+                .isLike(isLike)
 //                .commentCount(commentCount)
                 .nickname(board.getWriter().getNickname())
                 .date(board.getBoardDate())
