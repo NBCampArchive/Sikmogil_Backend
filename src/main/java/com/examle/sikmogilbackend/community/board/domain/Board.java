@@ -84,5 +84,13 @@ public class Board {
     public void updateLikeCount() {
         this.likeCount++;
     }
-    
+
+    public void cancelLikeCount() {
+        if (this.likeCount <= 0) {
+            this.likeCount = 0;
+        } else {
+            this.likeCount--;
+        }
+    }
+
 }

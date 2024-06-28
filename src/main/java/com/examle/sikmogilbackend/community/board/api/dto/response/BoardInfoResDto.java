@@ -16,7 +16,7 @@ public record BoardInfoResDto(
         String title,
         String content,
         List<String> imageUrl,
-//        int likeCount,
+        int likeCount,
 //        int commentCount,
         String nickname,
         String date
@@ -34,7 +34,7 @@ public record BoardInfoResDto(
                 .title(board.getTitle())
                 .content(board.getContent())
                 .imageUrl(imageUrl)
-//                .likeCount(likeCount)
+                .likeCount(board.getLikeCount())
 //                .commentCount(commentCount)
                 .nickname(board.getWriter().getNickname())
                 .date(board.getBoardDate())
