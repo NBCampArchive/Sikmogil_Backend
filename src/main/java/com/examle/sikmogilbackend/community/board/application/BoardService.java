@@ -8,11 +8,9 @@ import com.examle.sikmogilbackend.community.board.domain.Board;
 import com.examle.sikmogilbackend.community.board.domain.BoardPicture;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardPictureRepository;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardRepository;
-import com.examle.sikmogilbackend.community.board.exception.BoardNotFoundException;
 import com.examle.sikmogilbackend.community.board.exception.NotBoardOwnerException;
+import com.examle.sikmogilbackend.global.util.GlobalUtil;
 import com.examle.sikmogilbackend.member.domain.Member;
-import com.examle.sikmogilbackend.member.domain.repository.MemberRepository;
-import com.examle.sikmogilbackend.member.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,13 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BoardService {
-    private final MemberRepository memberRepository;
+    private final GlobalUtil globalUtil;
     private final BoardRepository boardRepository;
     private final BoardPictureRepository boardPictureRepository;
 
     @Transactional
     public Long boardSave(String email, BoardSaveReqDto boardSaveReqDto) {
-        Member member = getMemberByEmail(email);
+        Member member = globalUtil.getMemberByEmail(email);
         Board board = boardSaveReqDto.toEntity(member);
 
         boardImageSave(board, boardSaveReqDto);
@@ -51,7 +49,7 @@ public class BoardService {
 
     // 게시글 조회 (전체, 다이어트, 운동, 자유)
     public BoardListResDto categoryByBoardAll(String email, String category, Pageable pageable) {
-        Member member = getMemberByEmail(email);
+        Member member = globalUtil.getMemberByEmail(email);
 
         Page<BoardInfoResDto> byBoards;
         if (category.equals("ALL")) {
@@ -66,8 +64,8 @@ public class BoardService {
 
     // 게시글 상세 조회
     public BoardInfoResDto boardDetail(String email, Long boardId) {
-        Member member = getMemberByEmail(email);
-        Board board = getBoardById(boardId);
+        Member member = globalUtil.getMemberByEmail(email);
+        Board board = globalUtil.getBoardById(boardId);
 
         return BoardInfoResDto.of(member, board);
     }
@@ -75,8 +73,8 @@ public class BoardService {
     // 게시글 삭제
     @Transactional
     public void boardDelete(String email, Long boardId) {
-        Member member = getMemberByEmail(email);
-        Board board = getBoardById(boardId);
+        Member member = globalUtil.getMemberByEmail(email);
+        Board board = globalUtil.getBoardById(boardId);
 
         checkBoardOwnership(member, board);
 
@@ -87,8 +85,8 @@ public class BoardService {
     // 게시글 수정
     @Transactional
     public BoardInfoResDto boardUpdate(String email, Long boardId, BoardUpdateReqDto boardUpdateReqDto) {
-        Member member = getMemberByEmail(email);
-        Board board = getBoardById(boardId);
+        Member member = globalUtil.getMemberByEmail(email);
+        Board board = globalUtil.getBoardById(boardId);
 
         checkBoardOwnership(member, board);
         board.boardUpdate(boardUpdateReqDto);
@@ -102,18 +100,6 @@ public class BoardService {
         }
 
         return BoardInfoResDto.of(member, board);
-    }
-
-    // 게시글 좋아요
-
-    // 게시글 좋아요 취소
-
-    private Member getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-    }
-
-    private Board getBoardById(Long boardId) {
-        return boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
     }
 
     private void checkBoardOwnership(Member member, Board board) {
