@@ -71,7 +71,9 @@ public class BoardService {
 
         boolean isLike = boardLikeRepository.existsByBoardAndMember(board, member);
 
-        return BoardInfoResDto.detailOf(member, board, isLike);
+        Board commentAndBoardInfo = boardRepository.findByDetailBoard(board);
+
+        return BoardInfoResDto.detailOf(member, commentAndBoardInfo, isLike);
     }
 
     // 게시글 삭제
