@@ -52,6 +52,9 @@ public class Board {
     @Schema(description = "신고 횟수", example = "1")
     private int reportCount;
 
+    @Schema(description = "좋아요 개수", example = "1")
+    private int likeCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @Schema(description = "작성자", example = "nickname")
@@ -68,6 +71,7 @@ public class Board {
         this.content = content;
         this.boardDate = String.valueOf(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         this.reportCount = 0;
+        this.likeCount = 0;
         this.writer = writer;
     }
 
@@ -77,4 +81,8 @@ public class Board {
         this.content = boardUpdateReqDto.content();
     }
 
+    public void updateLikeCount() {
+        this.likeCount++;
+    }
+    
 }

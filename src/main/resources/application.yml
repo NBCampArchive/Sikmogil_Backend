@@ -1,3 +1,6 @@
+server:
+  port: 8090
+
 spring:
   cloud:
     gcp:
@@ -39,8 +42,8 @@ jwt:
 token:
   expire:
     time:
-      access : ${token.expire.time.access}
-      refresh : ${token.expire.time.refresh}
+      access: ${token.expire.time.access}
+      refresh: ${token.expire.time.refresh}
 
 myapp:
   api-url: ${myapp.api-url}
