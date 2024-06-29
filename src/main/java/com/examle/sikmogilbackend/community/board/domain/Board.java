@@ -1,6 +1,7 @@
 package com.examle.sikmogilbackend.community.board.domain;
 
 import com.examle.sikmogilbackend.community.board.api.dto.request.BoardUpdateReqDto;
+import com.examle.sikmogilbackend.community.comment.domain.Comment;
 import com.examle.sikmogilbackend.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -63,6 +64,9 @@ public class Board {
     @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
     @Schema(description = "이미지")
     private List<BoardPicture> pictures = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     private Board(Category category, String title, String content, Member writer) {

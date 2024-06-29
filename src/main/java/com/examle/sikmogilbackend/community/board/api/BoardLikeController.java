@@ -28,7 +28,7 @@ public class BoardLikeController {
             @ApiResponse(responseCode = "200", description = "게시글 좋아요 성공"),
             @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
     })
-    @PostMapping("/")
+    @PostMapping("/like")
     public RspTemplate<Void> addBoardLike(@AuthenticationPrincipal String email, @RequestParam Long boardId) {
         boardLikeService.addBoardLike(email, boardId);
         return new RspTemplate<>(HttpStatus.OK, "게시글 좋아요");
@@ -40,7 +40,7 @@ public class BoardLikeController {
             @ApiResponse(responseCode = "200", description = "게시글 좋아요 취서 성공"),
             @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
     })
-    @PostMapping("/")
+    @PostMapping("/cancel")
     public RspTemplate<Void> cancelBoardLike(@AuthenticationPrincipal String email, @RequestParam Long boardId) {
         boardLikeService.cancelBoardLike(email, boardId);
         return new RspTemplate<>(HttpStatus.OK, "게시글 좋아요 취소");

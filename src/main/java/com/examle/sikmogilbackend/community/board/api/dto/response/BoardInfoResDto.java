@@ -3,6 +3,7 @@ package com.examle.sikmogilbackend.community.board.api.dto.response;
 import com.examle.sikmogilbackend.community.board.domain.Board;
 import com.examle.sikmogilbackend.community.board.domain.BoardPicture;
 import com.examle.sikmogilbackend.community.board.domain.Category;
+import com.examle.sikmogilbackend.community.comment.api.dto.response.CommentInfoResDto;
 import com.examle.sikmogilbackend.member.domain.Member;
 import java.util.List;
 import lombok.Builder;
@@ -17,9 +18,11 @@ public record BoardInfoResDto(
         String content,
         List<String> imageUrl,
         int likeCount,
-//        int commentCount,
+        boolean isLike,
+        int commentCount,
         String nickname,
-        String date
+        String date,
+        List<CommentInfoResDto> comments
 ) {
     public static BoardInfoResDto of(Member member, Board board) {
         List<String> imageUrl = board.getPictures().stream()
@@ -35,9 +38,35 @@ public record BoardInfoResDto(
                 .content(board.getContent())
                 .imageUrl(imageUrl)
                 .likeCount(board.getLikeCount())
-//                .commentCount(commentCount)
+                .commentCount(board.getComments().size())
                 .nickname(board.getWriter().getNickname())
                 .date(board.getBoardDate())
+                .build();
+    }
+
+    public static BoardInfoResDto detailOf(Member member, Board board, boolean isLike) {
+        List<String> imageUrl = board.getPictures().stream()
+                .map(BoardPicture::getImageUrl)
+                .toList();
+
+        List<CommentInfoResDto> commentInfoResDto = board.getComments().stream()
+                .map(CommentInfoResDto::of)
+                .toList();
+
+        return BoardInfoResDto.builder()
+                .myMemberId(member.getMemberId())
+                .writerMemberId(board.getWriter().getMemberId())
+                .boardId(board.getBoardId())
+                .category(board.getCategory())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .imageUrl(imageUrl)
+                .likeCount(board.getLikeCount())
+                .isLike(isLike)
+                .commentCount(commentInfoResDto.size())
+                .nickname(board.getWriter().getNickname())
+                .date(board.getBoardDate())
+                .comments(commentInfoResDto)
                 .build();
     }
 }

@@ -1,10 +1,12 @@
 package com.examle.sikmogilbackend.community.board.domain.repository;
 
 import static com.examle.sikmogilbackend.community.board.domain.QBoard.board;
+import static com.examle.sikmogilbackend.community.comment.domain.QComment.comment;
 
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardInfoResDto;
 import com.examle.sikmogilbackend.community.board.domain.Board;
 import com.examle.sikmogilbackend.community.board.domain.Category;
+import com.examle.sikmogilbackend.community.board.domain.QBoard;
 import com.examle.sikmogilbackend.member.domain.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -17,11 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    @Transactional(readOnly = true)
     public Page<BoardInfoResDto> findByCategoryWithBoard(Member member, String category, Pageable pageable) {
         long total = queryFactory
                 .selectFrom(board)
@@ -44,7 +46,6 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<BoardInfoResDto> findByBoardAll(Member member, Pageable pageable) {
         long total = queryFactory
                 .selectFrom(board)
@@ -62,5 +63,16 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 .toList();
 
         return new PageImpl<>(boardDtos, pageable, total);
+    }
+
+    @Override
+    public Board findByDetailBoard(Board board) {
+        QBoard qBoard = QBoard.board;
+        return queryFactory
+                .selectFrom(qBoard)
+                .leftJoin(qBoard.comments, comment).fetchJoin()
+                .where(qBoard.boardId.eq(board.getBoardId()))
+                .fetchOne();
+
     }
 }
