@@ -44,7 +44,7 @@ public class Comment {
         this.board = board;
     }
 
-    public void updateContent() {
+    public void updateContent(String content) {
         this.content = content;
     }
 }

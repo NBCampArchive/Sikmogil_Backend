@@ -5,12 +5,14 @@ import lombok.Builder;
 
 @Builder
 public record CommentInfoResDto(
+        String writerProfileImage,
         Long writerMemberId,
         Long commentId,
         String content
 ) {
     public static CommentInfoResDto of(Comment comment) {
         return CommentInfoResDto.builder()
+                .writerProfileImage(comment.getWriter().getPicture())
                 .writerMemberId(comment.getWriter().getMemberId())
                 .commentId(comment.getCommentId())
                 .content(comment.getContent())
