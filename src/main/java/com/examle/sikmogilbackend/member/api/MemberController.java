@@ -86,6 +86,7 @@ public class MemberController {
     @PostMapping("/delete")
     public RspTemplate<String> memberDeleteAccount(@AuthenticationPrincipal String email) {
         memberService.memberDeleteAccount(email);
+        
         return new RspTemplate<>(HttpStatus.OK, "회원 탈퇴", String.format("이메일: %s님 회원 탈퇴", email));
     }
 }
