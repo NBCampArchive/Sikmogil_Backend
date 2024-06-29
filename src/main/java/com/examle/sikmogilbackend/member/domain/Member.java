@@ -3,21 +3,27 @@ package com.examle.sikmogilbackend.member.domain;
 import com.examle.sikmogilbackend.member.api.dto.reqeust.OnboardingInfoUpdateReqDto;
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
+    private static final String NOT_KNOWN = "(알수없음)";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,6 +81,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Calendar> calendars = new ArrayList<>();
 
+    @Schema(description = "회원 탈퇴 여부", example = "true: 탈퇴 O, false: 탈퇴 X")
+    private boolean isDelete;
+
     @Builder
     private Member(boolean firstLogin, String email, String name, String picture, SocialType socialType, Role role) {
         this.firstLogin = firstLogin;
@@ -98,7 +107,7 @@ public class Member {
         this.remindTime = onboardingInfoUpdateReqDto.remindTime();
     }
 
-    public OnboardingInfoUpdateReqDto toDTO(){
+    public OnboardingInfoUpdateReqDto toDTO() {
         return OnboardingInfoUpdateReqDto.builder()
                 .picture(picture)
                 .nickname(nickname)
@@ -115,5 +124,16 @@ public class Member {
 
     public void firstLongUpdate() {
         this.firstLogin = false;
+    }
+
+    public void deleteAccount() {
+        this.isDelete = true;
+        this.email = NOT_KNOWN;
+        this.name = NOT_KNOWN;
+        this.picture = NOT_KNOWN;
+        this.nickname = NOT_KNOWN;
+        this.gender = NOT_KNOWN;
+        this.height = NOT_KNOWN;
+        this.weight = NOT_KNOWN;
     }
 }

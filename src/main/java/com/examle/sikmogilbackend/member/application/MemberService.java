@@ -42,4 +42,12 @@ public class MemberService {
         }
     }
 
+    // 회원 탈퇴
+    @Transactional
+    public void memberDeleteAccount(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+
+        member.deleteAccount();
+    }
+
 }
