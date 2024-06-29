@@ -2,15 +2,12 @@ package com.examle.sikmogilbackend.challenge.domain;
 
 import com.examle.sikmogilbackend.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -47,9 +44,9 @@ public class Challenge {
     @Schema(description = "챌린지 그룹 활동 정도")
     private String activityLevel;
 
-    @Schema(description = "챌린지 그룹 참여자 목록")
-    @OneToMany(mappedBy = "challenge", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Member> participantList = new ArrayList<>();
+//    @Schema(description = "챌린지 그룹 참여자 목록")
+//    @OneToMany(mappedBy = "challenge", orphanRemoval = true, cascade = CascadeType.ALL)
+//    private List<Member> participantList = new ArrayList<>();
 
     @Builder
     private Challenge(Member leader, String topic, String name, String introduction, String gender,
@@ -61,7 +58,7 @@ public class Challenge {
         this.introduction = introduction;
         this.gender = gender;
         this.activityLevel = activityLevel;
-        this.participantList = participantList;
+//        this.participantList = participantList;
     }
 
 }
