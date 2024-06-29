@@ -6,9 +6,12 @@ import com.examle.sikmogilbackend.community.board.api.dto.response.BoardInfoResD
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardListResDto;
 import com.examle.sikmogilbackend.community.board.domain.Board;
 import com.examle.sikmogilbackend.community.board.domain.BoardPicture;
+import com.examle.sikmogilbackend.community.board.domain.Report;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardLikeRepository;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardPictureRepository;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardRepository;
+import com.examle.sikmogilbackend.community.board.domain.repository.ReportRepository;
+import com.examle.sikmogilbackend.community.board.exception.ExistsReportException;
 import com.examle.sikmogilbackend.community.board.exception.NotBoardOwnerException;
 import com.examle.sikmogilbackend.global.util.GlobalUtil;
 import com.examle.sikmogilbackend.member.domain.Member;
@@ -28,6 +31,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardPictureRepository boardPictureRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final ReportRepository reportRepository;
 
     @Transactional
     public Long boardSave(String email, BoardSaveReqDto boardSaveReqDto) {
@@ -114,6 +118,25 @@ public class BoardService {
         if (!member.getMemberId().equals(board.getWriter().getMemberId())) {
             throw new NotBoardOwnerException();
         }
+    }
+
+    // 게시글 신고하기
+    @Transactional
+    public void boardReport(String email, Long boardId) {
+        Member member = globalUtil.getMemberByEmail(email);
+        Board board = globalUtil.getBoardById(boardId);
+        
+        if (reportRepository.existsByBoardAndMember(board, member)) {
+            throw new ExistsReportException();
+        }
+
+        Report report = Report.builder()
+                .member(member)
+                .board(board)
+                .build();
+
+        board.updateReportCount();
+        reportRepository.save(report);
     }
 
 }

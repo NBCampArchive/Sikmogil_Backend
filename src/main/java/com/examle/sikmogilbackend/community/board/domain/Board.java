@@ -97,4 +97,8 @@ public class Board {
         }
     }
 
+    public void updateReportCount() {
+        this.reportCount++;
+    }
+
 }

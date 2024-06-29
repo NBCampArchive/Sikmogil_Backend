@@ -102,4 +102,10 @@ public class BoardController {
         return new RspTemplate<>(HttpStatus.OK, "게시글 수정", boardService.boardUpdate(email, boardId, boardUpdateReqDto));
     }
 
+    @PostMapping("/report")
+    public RspTemplate<String> boardReport(@AuthenticationPrincipal String email,
+                                           @RequestParam(name = "boardId") Long boardId) {
+        boardService.boardReport(email, boardId);
+        return new RspTemplate<>(HttpStatus.OK, "게시글 신고", String.format("%d번 게시글 신고", boardId));
+    }
 }
