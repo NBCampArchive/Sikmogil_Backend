@@ -83,10 +83,10 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 값"),
             @ApiResponse(responseCode = "401", description = "헤더 없음 or 토큰 불일치", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
-    @PostMapping("/delete")
+    @PostMapping("/delete-account")
     public RspTemplate<String> memberDeleteAccount(@AuthenticationPrincipal String email) {
         memberService.memberDeleteAccount(email);
-        
+
         return new RspTemplate<>(HttpStatus.OK, "회원 탈퇴", String.format("이메일: %s님 회원 탈퇴", email));
     }
 }
