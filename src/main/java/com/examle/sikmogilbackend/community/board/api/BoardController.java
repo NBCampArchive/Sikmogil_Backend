@@ -102,4 +102,15 @@ public class BoardController {
         return new RspTemplate<>(HttpStatus.OK, "게시글 수정", boardService.boardUpdate(email, boardId, boardUpdateReqDto));
     }
 
+    @Operation(summary = "게시글 신고", description = "게시글을 신고합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "신고 성공"),
+            @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
+    })
+    @PostMapping("/report")
+    public RspTemplate<String> boardReport(@AuthenticationPrincipal String email,
+                                           @RequestParam(name = "boardId") Long boardId) {
+        boardService.boardReport(email, boardId);
+        return new RspTemplate<>(HttpStatus.OK, "게시글 신고", String.format("%d번 게시글 신고", boardId));
+    }
 }
