@@ -1,5 +1,8 @@
 package com.examle.sikmogilbackend.global.util;
 
+import com.examle.sikmogilbackend.challenge.domain.Challenge;
+import com.examle.sikmogilbackend.challenge.domain.repository.ChallengeRepository;
+import com.examle.sikmogilbackend.challenge.exception.ChallengeNotFoundException;
 import com.examle.sikmogilbackend.community.board.domain.Board;
 import com.examle.sikmogilbackend.community.board.domain.repository.BoardRepository;
 import com.examle.sikmogilbackend.community.board.exception.BoardNotFoundException;
@@ -18,6 +21,7 @@ public class GlobalUtil {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final ChallengeRepository challengeRepository;
 
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
@@ -30,4 +34,9 @@ public class GlobalUtil {
     public Comment getCommentById(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
     }
+
+    public Challenge getChallengeById(Long challengeId) {
+        return challengeRepository.findById(challengeId).orElseThrow(ChallengeNotFoundException::new);
+    }
+
 }
