@@ -4,12 +4,24 @@ import com.examle.sikmogilbackend.member.domain.Member;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogInPictureDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
@@ -42,7 +54,7 @@ public class DietLog {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public DietLogDTO toDTO(){
+    public DietLogDTO toDTO() {
         return DietLogDTO.builder()
                 .waterIntake(waterIntake)
                 .totalCalorieEaten(totalCalorieEaten)
@@ -50,7 +62,7 @@ public class DietLog {
                 .build();
     }
 
-    public DietLogDTO toDTO(Long canEatCalorie){
+    public DietLogDTO toDTO(Long canEatCalorie) {
         return DietLogDTO.builder()
                 .canEatCalorie(canEatCalorie)
                 .waterIntake(waterIntake)
@@ -59,10 +71,8 @@ public class DietLog {
                 .build();
     }
 
-    public DietLogInPictureDTO toPictureDTO(){
+    public DietLogInPictureDTO toPictureDTO() {
         return DietLogInPictureDTO.builder()
-                .waterIntake(waterIntake)
-                .totalCalorieEaten(totalCalorieEaten)
                 .dietPictureDTOS(
                         dietPictures.stream()
                                 .map(DietPicture::toDTO)
@@ -71,7 +81,7 @@ public class DietLog {
                 .build();
     }
 
-    public void updateDietLog(DietLogDTO dietLogDTO){
+    public void updateDietLog(DietLogDTO dietLogDTO) {
         this.dietDate = dietLogDTO.dietDate();
         this.waterIntake = dietLogDTO.waterIntake();
         this.totalCalorieEaten = dietLogDTO.totalCalorieEaten();
