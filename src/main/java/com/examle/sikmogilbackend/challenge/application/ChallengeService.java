@@ -7,6 +7,7 @@ import com.examle.sikmogilbackend.challenge.domain.repository.ChallengeMemberRep
 import com.examle.sikmogilbackend.challenge.domain.repository.ChallengeRepository;
 import com.examle.sikmogilbackend.challenge.exception.AlreadyParticipatingException;
 import com.examle.sikmogilbackend.challenge.exception.ChallengeLeaderException;
+import com.examle.sikmogilbackend.challenge.exception.ExistsChallengeMemberException;
 import com.examle.sikmogilbackend.global.util.GlobalUtil;
 import com.examle.sikmogilbackend.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class ChallengeService {
 
     // 챌린지 그룹 수정
 
-    // 챌린지 그룹 삭제
+    // 그룹장 챌린지 그룹 삭제
 
     // 챌린지 그룹 리스트
 
@@ -57,8 +58,18 @@ public class ChallengeService {
                 .build());
     }
 
-    // 챌린지 그룹 탈퇴하기
+    // 참여자 챌린지 그룹 탈퇴하기
+    @Transactional
+    public void unJoinChallenge(String email, Long challengeId) {
+        Member member = globalUtil.getMemberByEmail(email);
+        Challenge challenge = globalUtil.getChallengeById(challengeId);
 
+        if (!challengeMemberRepository.existsByChallengeAndMember(challenge, member)) {
+            throw new ExistsChallengeMemberException("챌린지 그룹에 참여하고 있지 않습니다.");
+        }
+
+        challengeMemberRepository.deleteByChallengeAndMember(challenge, member);
+    }
 
     private void validateNotChallengeLeader(Member member, Challenge challenge) {
         if (member.getMemberId().equals(challenge.getLeader().getMemberId())) {
