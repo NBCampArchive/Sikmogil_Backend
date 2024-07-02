@@ -1,6 +1,7 @@
 package com.examle.sikmogilbackend.challenge.application;
 
 import com.examle.sikmogilbackend.challenge.api.dto.request.ChallengeSaveReqDto;
+import com.examle.sikmogilbackend.challenge.api.dto.request.ChallengeUpdateReqDto;
 import com.examle.sikmogilbackend.challenge.api.dto.response.ChallengeInfoResDto;
 import com.examle.sikmogilbackend.challenge.api.dto.response.ChallengeListResDto;
 import com.examle.sikmogilbackend.challenge.domain.Challenge;
@@ -12,6 +13,7 @@ import com.examle.sikmogilbackend.challenge.domain.repository.ChallengeRepositor
 import com.examle.sikmogilbackend.challenge.exception.AlreadyParticipatingException;
 import com.examle.sikmogilbackend.challenge.exception.ChallengeLeaderException;
 import com.examle.sikmogilbackend.challenge.exception.ExistsChallengeMemberException;
+import com.examle.sikmogilbackend.challenge.exception.NotChallengeOwnerException;
 import com.examle.sikmogilbackend.global.util.GlobalUtil;
 import com.examle.sikmogilbackend.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +46,37 @@ public class ChallengeService {
     }
 
     // 챌린지 그룹 수정
+    @Transactional
+    public ChallengeInfoResDto challengeUpdate(String email, Long challengeId,
+                                               ChallengeUpdateReqDto challengeUpdateReqDto) {
+        Member member = globalUtil.getMemberByEmail(email);
+        Challenge challenge = globalUtil.getChallengeById(challengeId);
+
+        checkChallengeOwnership(member, challenge);
+
+        ChallengeLeader challengeLeader = challengeLeaderRepository.findByChallengeAndMember(challenge, member)
+                .orElseThrow();
+
+        boolean isJoin = challengeMemberRepository.existsByChallengeAndMember(challenge, member);
+
+        challenge.update(challengeUpdateReqDto);
+        return ChallengeInfoResDto.detailOf(member, challenge, challengeLeader, isJoin);
+    }
 
     // 그룹장 챌린지 그룹 삭제
+    @Transactional
+    public void challengeDelete(String email, Long challengeId) {
+        Member member = globalUtil.getMemberByEmail(email);
+        Challenge challenge = globalUtil.getChallengeById(challengeId);
+
+        checkChallengeOwnership(member, challenge);
+
+        ChallengeLeader challengeLeader = challengeLeaderRepository.findByChallengeAndMember(challenge, member)
+                .orElseThrow();
+
+        challengeLeaderRepository.delete(challengeLeader);
+        challengeRepository.delete(challenge);
+    }
 
     // 챌린지 그룹 리스트 (Topic을 기준으로 조회되어야함.)
     public ChallengeListResDto topicByChallengeAll(String email, String topic, Pageable pageable) {
@@ -98,6 +129,12 @@ public class ChallengeService {
         }
 
         challengeMemberRepository.deleteByChallengeAndMember(challenge, member);
+    }
+
+    private void checkChallengeOwnership(Member member, Challenge challenge) {
+        if (!challengeLeaderRepository.existsByChallengeAndMember(challenge, member)) {
+            throw new NotChallengeOwnerException();
+        }
     }
 
     private void validateNotChallengeLeader(Member member, Challenge challenge) {

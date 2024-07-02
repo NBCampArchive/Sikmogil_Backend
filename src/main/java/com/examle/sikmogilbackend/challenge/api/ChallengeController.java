@@ -1,6 +1,7 @@
 package com.examle.sikmogilbackend.challenge.api;
 
 import com.examle.sikmogilbackend.challenge.api.dto.request.ChallengeSaveReqDto;
+import com.examle.sikmogilbackend.challenge.api.dto.request.ChallengeUpdateReqDto;
 import com.examle.sikmogilbackend.challenge.api.dto.response.ChallengeInfoResDto;
 import com.examle.sikmogilbackend.challenge.api.dto.response.ChallengeListResDto;
 import com.examle.sikmogilbackend.challenge.application.ChallengeService;
@@ -17,9 +18,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,9 +46,30 @@ public class ChallengeController {
         return new RspTemplate<>(HttpStatus.CREATED, "챌린지 그룹 생성", String.format("%d번 챌린지 그룹 생성!", challengeId));
     }
 
-    // 챌린지 그룹 수정
+    @Operation(summary = "챌린지 그룹 수정", description = "챌린지 그룹 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "수정 성공"),
+            @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
+    })
+    @PutMapping("/{challengeId}")
+    public RspTemplate<ChallengeInfoResDto> challengeUpdate(@AuthenticationPrincipal String email,
+                                                            @PathVariable Long challengeId,
+                                                            @RequestBody ChallengeUpdateReqDto challengeUpdateReqDto) {
+        return new RspTemplate<>(HttpStatus.OK, "챌린지 그룹 수정",
+                challengeService.challengeUpdate(email, challengeId, challengeUpdateReqDto));
+    }
 
-    // 그룹장 챌린지 그룹 삭제
+    @Operation(summary = "챌린지 그룹 삭제", description = "챌린지 그룹을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "삭제 성공"),
+            @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
+    })
+    @DeleteMapping("/{challengeId}")
+    public RspTemplate<Void> challengeDelete(@AuthenticationPrincipal String email,
+                                             @PathVariable Long challengeId) {
+        challengeService.challengeDelete(email, challengeId);
+        return new RspTemplate<>(HttpStatus.OK, "챌린지 그룹 삭제");
+    }
 
     // 챌린지 그룹 리스트
     @Operation(summary = "주제별 챌린지 그룹 목록 조회",

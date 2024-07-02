@@ -1,5 +1,6 @@
 package com.examle.sikmogilbackend.challenge.domain;
 
+import com.examle.sikmogilbackend.challenge.api.dto.request.ChallengeUpdateReqDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -53,6 +54,14 @@ public class Challenge {
         this.gender = gender;
         this.activityLevel = activityLevel;
         this.challengeMembers = challengeMembers;
+    }
+
+    public void update(ChallengeUpdateReqDto challengeUpdateReqDto) {
+        this.topic = challengeUpdateReqDto.topic();
+        this.name = challengeUpdateReqDto.name();
+        this.introduction = challengeUpdateReqDto.introduction();
+        this.gender = challengeUpdateReqDto.gender();
+        this.activityLevel = challengeUpdateReqDto.activityLevel();
     }
 
 }
