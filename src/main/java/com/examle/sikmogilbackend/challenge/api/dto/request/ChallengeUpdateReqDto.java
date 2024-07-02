@@ -2,7 +2,7 @@ package com.examle.sikmogilbackend.challenge.api.dto.request;
 
 import com.examle.sikmogilbackend.challenge.domain.Challenge;
 
-public record ChallengeSaveReqDto(
+public record ChallengeUpdateReqDto(
         String topic,
         String name,
         String introduction,
