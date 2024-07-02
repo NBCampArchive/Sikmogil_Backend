@@ -1,7 +1,6 @@
 package com.examle.sikmogilbackend.challenge.api.dto.request;
 
 import com.examle.sikmogilbackend.challenge.domain.Challenge;
-import com.examle.sikmogilbackend.member.domain.Member;
 
 public record ChallengeSaveReqDto(
         String topic,
@@ -10,9 +9,8 @@ public record ChallengeSaveReqDto(
         String gender,
         String activityLevel
 ) {
-    public Challenge toEntity(Member member) {
+    public Challenge toEntity() {
         return Challenge.builder()
-                .leader(member)
                 .topic(topic)
                 .name(name)
                 .introduction(introduction)

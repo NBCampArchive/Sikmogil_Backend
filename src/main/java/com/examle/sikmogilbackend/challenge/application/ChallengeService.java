@@ -2,8 +2,11 @@ package com.examle.sikmogilbackend.challenge.application;
 
 import com.examle.sikmogilbackend.challenge.api.dto.request.ChallengeSaveReqDto;
 import com.examle.sikmogilbackend.challenge.api.dto.response.ChallengeInfoResDto;
+import com.examle.sikmogilbackend.challenge.api.dto.response.ChallengeListResDto;
 import com.examle.sikmogilbackend.challenge.domain.Challenge;
+import com.examle.sikmogilbackend.challenge.domain.ChallengeLeader;
 import com.examle.sikmogilbackend.challenge.domain.ChallengeMember;
+import com.examle.sikmogilbackend.challenge.domain.repository.ChallengeLeaderRepository;
 import com.examle.sikmogilbackend.challenge.domain.repository.ChallengeMemberRepository;
 import com.examle.sikmogilbackend.challenge.domain.repository.ChallengeRepository;
 import com.examle.sikmogilbackend.challenge.exception.AlreadyParticipatingException;
@@ -12,6 +15,8 @@ import com.examle.sikmogilbackend.challenge.exception.ExistsChallengeMemberExcep
 import com.examle.sikmogilbackend.global.util.GlobalUtil;
 import com.examle.sikmogilbackend.member.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +27,18 @@ public class ChallengeService {
     private final GlobalUtil globalUtil;
     private final ChallengeRepository challengeRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
+    private final ChallengeLeaderRepository challengeLeaderRepository;
 
     // 챌린지 그룹 생성
     @Transactional
     public Long challengeSave(String email, ChallengeSaveReqDto challengeSaveReqDto) {
         Member member = globalUtil.getMemberByEmail(email);
+        Challenge challenge = challengeRepository.save(challengeSaveReqDto.toEntity());
 
-        Challenge challenge = challengeRepository.save(challengeSaveReqDto.toEntity(member));
+        challengeLeaderRepository.save(ChallengeLeader.builder()
+                .challenge(challenge)
+                .member(member)
+                .build());
 
         return challenge.getChallengeId();
     }
@@ -37,7 +47,15 @@ public class ChallengeService {
 
     // 그룹장 챌린지 그룹 삭제
 
-    // 챌린지 그룹 리스트
+    // 챌린지 그룹 리스트 (Topic을 기준으로 조회되어야함.)
+    public ChallengeListResDto topicByChallengeAll(String email, String topic, Pageable pageable) {
+        Member member = globalUtil.getMemberByEmail(email);
+
+        Page<ChallengeInfoResDto> byTopicWithChallenge = challengeRepository
+                .findByTopicWithChallenge(member, topic, pageable);
+
+        return ChallengeListResDto.from(byTopicWithChallenge);
+    }
 
     // 챌린지 그룹 상세보기
     public ChallengeInfoResDto challengeDetail(String email, Long challengeId) {
@@ -46,7 +64,10 @@ public class ChallengeService {
 
         boolean isJoin = challengeMemberRepository.existsByChallengeAndMember(challenge, member);
 
-        return ChallengeInfoResDto.of(member, challenge, isJoin);
+        ChallengeLeader challengeLeader = challengeLeaderRepository.findByChallengeAndMember(challenge, member)
+                .orElseThrow();
+
+        return ChallengeInfoResDto.detailOf(member, challenge, challengeLeader, isJoin);
     }
 
     // 챌린지 그룹 참여하기
@@ -55,7 +76,6 @@ public class ChallengeService {
         Member member = globalUtil.getMemberByEmail(email);
         Challenge challenge = globalUtil.getChallengeById(challengeId);
 
-        // 챌린지 그룹장이 본인인지 확인
         validateNotChallengeLeader(member, challenge);
 
         // 이미 챌린지 그룹에 참여하고 있는지 확인
@@ -81,7 +101,7 @@ public class ChallengeService {
     }
 
     private void validateNotChallengeLeader(Member member, Challenge challenge) {
-        if (member.getMemberId().equals(challenge.getLeader().getMemberId())) {
+        if (challengeLeaderRepository.existsByChallengeAndMember(challenge, member)) {
             throw new ChallengeLeaderException("챌린지 그룹장은 본인의 챌린지 그룹에 참여할 수 없습니다.");
         }
     }
