@@ -1,6 +1,7 @@
 package com.examle.sikmogilbackend.challenge.application;
 
 import com.examle.sikmogilbackend.challenge.api.dto.request.ChallengeSaveReqDto;
+import com.examle.sikmogilbackend.challenge.api.dto.response.ChallengeInfoResDto;
 import com.examle.sikmogilbackend.challenge.domain.Challenge;
 import com.examle.sikmogilbackend.challenge.domain.ChallengeMember;
 import com.examle.sikmogilbackend.challenge.domain.repository.ChallengeMemberRepository;
@@ -39,6 +40,14 @@ public class ChallengeService {
     // 챌린지 그룹 리스트
 
     // 챌린지 그룹 상세보기
+    public ChallengeInfoResDto challengeDetail(String email, Long challengeId) {
+        Member member = globalUtil.getMemberByEmail(email);
+        Challenge challenge = globalUtil.getChallengeById(challengeId);
+
+        boolean isJoin = challengeMemberRepository.existsByChallengeAndMember(challenge, member);
+
+        return ChallengeInfoResDto.of(member, challenge, isJoin);
+    }
 
     // 챌린지 그룹 참여하기
     @Transactional
