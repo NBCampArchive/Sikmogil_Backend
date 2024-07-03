@@ -5,7 +5,6 @@ import com.examle.sikmogilbackend.community.board.api.dto.request.BoardUpdateReq
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardInfoResDto;
 import com.examle.sikmogilbackend.community.board.api.dto.response.BoardListResDto;
 import com.examle.sikmogilbackend.community.board.application.BoardService;
-import com.examle.sikmogilbackend.gcs.application.GcsService;
 import com.examle.sikmogilbackend.global.template.RspTemplate;
 import com.examle.sikmogilbackend.global.util.PageableUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,11 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
 
     private final BoardService boardService;
-    private final GcsService gcsService;
 
-    public BoardController(BoardService boardService, GcsService gcsService) {
+    public BoardController(BoardService boardService) {
         this.boardService = boardService;
-        this.gcsService = gcsService;
     }
 
     @Operation(summary = "게시글 등록", description = "게시글 등록 합니다, Request의 Category는 (ALL, DIET, WORKOUT, FREE) 이와같이 작성해야함.")
@@ -105,9 +102,15 @@ public class BoardController {
         return new RspTemplate<>(HttpStatus.OK, "게시글 수정", boardService.boardUpdate(email, boardId, boardUpdateReqDto));
     }
 
-    // 게시글 좋아요
-
-    // 게시글 좋아요 취소
-
-
+    @Operation(summary = "게시글 신고", description = "게시글을 신고합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "신고 성공"),
+            @ApiResponse(responseCode = "401", description = "인증실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
+    })
+    @PostMapping("/report")
+    public RspTemplate<String> boardReport(@AuthenticationPrincipal String email,
+                                           @RequestParam(name = "boardId") Long boardId) {
+        boardService.boardReport(email, boardId);
+        return new RspTemplate<>(HttpStatus.OK, "게시글 신고", String.format("%d번 게시글 신고", boardId));
+    }
 }

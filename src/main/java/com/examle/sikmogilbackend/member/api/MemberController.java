@@ -76,5 +76,5 @@ public class MemberController {
     public RspTemplate<OnboardingInfoUpdateReqDto> findMember(@AuthenticationPrincipal String email) {
         return new RspTemplate<>(HttpStatus.OK, "온보딩 정보 출력", memberService.findMember(email).toDTO());
     }
-
+    
 }

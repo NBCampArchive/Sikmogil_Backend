@@ -2,10 +2,19 @@ package com.examle.sikmogilbackend.record.WorkoutLog.domain;
 
 import com.examle.sikmogilbackend.record.Calendar.domain.Calendar;
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
-import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
@@ -42,8 +51,9 @@ public class WorkoutList {
     @JoinColumn(name = "workout_log_id")
     private WorkoutLog workoutLog;
 
-    public WorkoutListDTO toDTO(){
+    public WorkoutListDTO toDTO() {
         return WorkoutListDTO.builder()
+                .date(calendar.getDiaryDate())
                 .workoutListId(workoutListId)
                 .performedWorkout(performedWorkout)
                 .workoutTime(workoutTime)
@@ -51,5 +61,9 @@ public class WorkoutList {
                 .workoutPicture(workoutPicture)
                 .calorieBurned(calorieBurned)
                 .build();
+    }
+
+    public void deleteWorkoutPicture() {
+        this.workoutPicture = null;
     }
 }

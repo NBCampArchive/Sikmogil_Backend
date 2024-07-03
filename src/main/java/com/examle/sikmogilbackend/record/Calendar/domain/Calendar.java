@@ -8,12 +8,23 @@ import com.examle.sikmogilbackend.record.WorkoutLog.domain.WorkoutList;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietPicture;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
@@ -28,12 +39,11 @@ public class Calendar {
     private Long calendarId;
 
     @Schema(description = "한 줄 일기", example = "오늘 하루 좋았다.")
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String diaryText;
 
     @Schema(description = "해당 날짜의 체중", example = "오늘 하루 좋았다.")
-    @Column(columnDefinition="TEXT")
-    private Long diaryWeight;
+    private Double diaryWeight;
 
     @Schema(description = "일기 날짜", example = "2024.06.02")
     protected String diaryDate;
@@ -49,7 +59,7 @@ public class Calendar {
     private List<WorkoutList> workoutLists = new ArrayList<>();
 
 
-    public CalendarDTO toDTO(){
+    public CalendarDTO toDTO() {
         return CalendarDTO.builder()
                 .diaryDate(diaryDate)
                 .diaryText(diaryText)
@@ -65,7 +75,7 @@ public class Calendar {
                 .build();
     }
 
-    public CalendarDTO toDTO(List<DietPictureDTO> dietPictureDTOS, List<WorkoutListDTO> workoutListDTOS){
+    public CalendarDTO toDTO(List<DietPictureDTO> dietPictureDTOS, List<WorkoutListDTO> workoutListDTOS) {
         return CalendarDTO.builder()
                 .diaryDate(diaryDate)
                 .diaryText(diaryText)
@@ -75,19 +85,19 @@ public class Calendar {
                 .build();
     }
 
-    public WeekWeightDTO toWeekDTO(){
+    public WeekWeightDTO toWeekDTO() {
         return WeekWeightDTO.builder()
                 .date(diaryDate)
                 .weight(diaryWeight)
                 .build();
     }
 
-    public void updateCalendar(CalendarDTO calendarDTO){
+    public void updateCalendar(CalendarDTO calendarDTO) {
         this.diaryDate = calendarDTO.diaryDate();
         this.diaryText = calendarDTO.diaryText();
     }
 
-    public void updateWeight(Long weight){
+    public void updateWeight(Double weight) {
         this.diaryWeight = weight;
     }
 

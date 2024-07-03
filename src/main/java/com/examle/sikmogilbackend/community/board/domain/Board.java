@@ -1,6 +1,7 @@
 package com.examle.sikmogilbackend.community.board.domain;
 
 import com.examle.sikmogilbackend.community.board.api.dto.request.BoardUpdateReqDto;
+import com.examle.sikmogilbackend.community.comment.domain.Comment;
 import com.examle.sikmogilbackend.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -52,6 +53,9 @@ public class Board {
     @Schema(description = "신고 횟수", example = "1")
     private int reportCount;
 
+    @Schema(description = "좋아요 개수", example = "1")
+    private int likeCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @Schema(description = "작성자", example = "nickname")
@@ -61,6 +65,9 @@ public class Board {
     @Schema(description = "이미지")
     private List<BoardPicture> pictures = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     private Board(Category category, String title, String content, Member writer) {
         this.category = category;
@@ -68,6 +75,7 @@ public class Board {
         this.content = content;
         this.boardDate = String.valueOf(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         this.reportCount = 0;
+        this.likeCount = 0;
         this.writer = writer;
     }
 
@@ -75,6 +83,22 @@ public class Board {
         this.title = boardUpdateReqDto.title();
         this.category = boardUpdateReqDto.category();
         this.content = boardUpdateReqDto.content();
+    }
+
+    public void updateLikeCount() {
+        this.likeCount++;
+    }
+
+    public void cancelLikeCount() {
+        if (this.likeCount <= 0) {
+            this.likeCount = 0;
+        } else {
+            this.likeCount--;
+        }
+    }
+
+    public void updateReportCount() {
+        this.reportCount++;
     }
 
 }

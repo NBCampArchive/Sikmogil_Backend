@@ -1,12 +1,13 @@
 package com.examle.sikmogilbackend.record.Calendar.api.dto;
 
 import com.examle.sikmogilbackend.record.WorkoutLog.api.dto.WorkoutListDTO;
-import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogDTO;
-import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogInPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.api.dto.DietPictureDTO;
-import lombok.*;
-
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Data
 @Getter
@@ -15,9 +16,12 @@ import java.util.List;
 @AllArgsConstructor
 public class FindCalendarByDateDTO {
     private String diaryDate;
-    private Long diaryWeight;
+    private Double diaryWeight;
     private String diaryText;
     private Long canEatCalorie;
-    private List<DietLogInPictureDTO> dietLogInPictureDTOS;
+    private Long waterIntake;
+    private Long totalCalorieEaten;
+    private List<DietPictureDTO> dietPictureDTOS;
+    //    private List<DietLogInPictureDTO> dietLogInPictureDTOS;
     private List<WorkoutListDTO> workoutLists;
 }
