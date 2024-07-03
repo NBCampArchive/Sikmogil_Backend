@@ -17,8 +17,10 @@ import com.examle.sikmogilbackend.record.dietLog.api.dto.DietLogInPictureDTO;
 import com.examle.sikmogilbackend.record.dietLog.application.DietLogService;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietLog;
 import com.examle.sikmogilbackend.record.dietLog.domain.DietPicture;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -112,13 +114,14 @@ public class CalendarService {
                 .diaryDate(calendar.getDiaryDate())
                 .diaryWeight(calendar.getDiaryWeight())
                 .diaryText(calendar.getDiaryText())
-//                .dietLogInPictureDTOS(dietLogInPictureDTOs)
                 .dietPictureDTOS(
-                        calendar.getDietPictures().stream()
+                        Optional.ofNullable(calendar.getDietPictures())
+                                .orElseGet(ArrayList::new).stream()
                                 .map(DietPicture::toDTO)
                                 .toList())
                 .workoutLists(
-                        calendar.getWorkoutLists().stream()
+                        Optional.ofNullable(calendar.getWorkoutLists())
+                                .orElseGet(ArrayList::new).stream()
                                 .map(WorkoutList::toDTO)
                                 .collect(Collectors.toList())
                 )
