@@ -85,7 +85,7 @@ public class CalendarController {
     @PostMapping("/updateWeight")
     public RspTemplate<String> updateWeight(Authentication authentication,
                                             @RequestParam String date,
-                                            @RequestParam Long weight) {
+                                            @RequestParam Double weight) {
         calendarService.updateWeight(authentication.getName(), date, weight);
         return new RspTemplate<>(HttpStatus.OK, "특정 날짜의 몸무게 저장 성공");
     }

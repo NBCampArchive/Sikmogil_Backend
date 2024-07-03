@@ -7,7 +7,7 @@ import lombok.Builder;
 @Builder
 public record CalendarResDto(
         String diaryDate,
-        Long diaryWeight,
+        Double diaryWeight,
         String diaryText,
         DietPictureDTO dietPicture,
         WorkoutListDTO workoutList
