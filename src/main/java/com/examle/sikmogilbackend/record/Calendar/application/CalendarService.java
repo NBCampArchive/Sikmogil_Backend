@@ -155,7 +155,7 @@ public class CalendarService {
     }
 
     @Transactional
-    public void updateWeight(String email, String date, Long weight) {
+    public void updateWeight(String email, String date, Double weight) {
         log.info("updateWeight ");
         log.info("email = " + email);
         log.info("date = " + date);

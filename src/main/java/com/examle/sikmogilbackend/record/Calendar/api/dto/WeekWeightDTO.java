@@ -5,6 +5,6 @@ import lombok.Builder;
 @Builder
 public record WeekWeightDTO(
         String date,
-        Long weight
-        ) {
+        Double weight
+) {
 }

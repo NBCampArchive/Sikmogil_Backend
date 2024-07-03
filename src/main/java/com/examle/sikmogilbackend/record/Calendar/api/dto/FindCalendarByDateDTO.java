@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FindCalendarByDateDTO {
     private String diaryDate;
-    private Long diaryWeight;
+    private Double diaryWeight;
     private String diaryText;
     private Long canEatCalorie;
     private Long waterIntake;
