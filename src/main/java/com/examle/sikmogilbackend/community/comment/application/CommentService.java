@@ -21,6 +21,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     // 댓글 저장
+    @Transactional
     public void commentSave(String email, CommentSaveReqDto commentSaveReqDto) {
         Member member = globalUtil.getMemberByEmail(email);
         Board board = globalUtil.getBoardById(commentSaveReqDto.boardId());
@@ -52,7 +53,7 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private static void checkCommentOwnership(Member member, Comment comment) {
+    private void checkCommentOwnership(Member member, Comment comment) {
         if (!member.getMemberId().equals(comment.getWriter().getMemberId())) {
             throw new NotCommentOwnerException();
         }
