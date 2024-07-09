@@ -38,7 +38,10 @@ public class BoardService {
         Member member = globalUtil.getMemberByEmail(email);
         Board board = boardSaveReqDto.toEntity(member);
 
-        boardImageSave(board, boardSaveReqDto);
+        if (boardSaveReqDto.imageUrl() != null) {
+            boardImageSave(board, boardSaveReqDto);
+        }
+
         Board saveBoard = boardRepository.save(board);
 
         return saveBoard.getBoardId();
@@ -125,7 +128,7 @@ public class BoardService {
     public void boardReport(String email, Long boardId) {
         Member member = globalUtil.getMemberByEmail(email);
         Board board = globalUtil.getBoardById(boardId);
-        
+
         if (reportRepository.existsByBoardAndMember(board, member)) {
             throw new ExistsReportException();
         }
