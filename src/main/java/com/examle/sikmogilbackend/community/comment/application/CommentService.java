@@ -4,12 +4,15 @@ import com.examle.sikmogilbackend.community.board.domain.Board;
 import com.examle.sikmogilbackend.community.comment.api.dto.request.CommentSaveReqDto;
 import com.examle.sikmogilbackend.community.comment.api.dto.request.CommentUpdateReqDto;
 import com.examle.sikmogilbackend.community.comment.api.dto.response.CommentInfoResDto;
+import com.examle.sikmogilbackend.community.comment.api.dto.response.CommentListResDto;
 import com.examle.sikmogilbackend.community.comment.domain.Comment;
 import com.examle.sikmogilbackend.community.comment.domain.repository.CommentRepository;
 import com.examle.sikmogilbackend.community.comment.exception.NotCommentOwnerException;
 import com.examle.sikmogilbackend.global.util.GlobalUtil;
 import com.examle.sikmogilbackend.member.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +42,7 @@ public class CommentService {
 
         comment.updateContent(commentUpdateReqDto.content());
 
-        return CommentInfoResDto.of(comment);
+        return CommentInfoResDto.of(member, comment);
     }
 
     // 댓글 삭제
@@ -58,4 +61,14 @@ public class CommentService {
             throw new NotCommentOwnerException();
         }
     }
+
+    // 댓글 조회
+    public CommentListResDto commentAll(String email, Long boardId, Pageable pageable) {
+        Member member = globalUtil.getMemberByEmail(email);
+
+        Page<CommentInfoResDto> byBoardBoardId = commentRepository.findByBoardBoardId(member, boardId, pageable);
+
+        return CommentListResDto.from(byBoardBoardId);
+    }
+
 }

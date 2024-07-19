@@ -21,8 +21,7 @@ public record BoardInfoResDto(
         boolean isLike,
         int commentCount,
         String nickname,
-        String date,
-        List<CommentInfoResDto> comments
+        String date
 ) {
     public static BoardInfoResDto of(Member member, Board board) {
         List<String> imageUrl = board.getPictures().stream()
@@ -50,7 +49,7 @@ public record BoardInfoResDto(
                 .toList();
 
         List<CommentInfoResDto> commentInfoResDto = board.getComments().stream()
-                .map(CommentInfoResDto::of)
+                .map(c -> CommentInfoResDto.of(member, c))
                 .toList();
 
         return BoardInfoResDto.builder()
@@ -66,7 +65,6 @@ public record BoardInfoResDto(
                 .commentCount(commentInfoResDto.size())
                 .nickname(board.getWriter().getNickname())
                 .date(board.getBoardDate())
-                .comments(commentInfoResDto)
                 .build();
     }
 }

@@ -67,7 +67,6 @@ public class BoardService {
             byBoards = boardRepository.findByCategoryWithBoard(member, category, pageable);
         }
 
-        // 좋아요, 댓글 Count 추가하기
         return BoardListResDto.from(byBoards);
     }
 
